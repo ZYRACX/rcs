@@ -5,6 +5,7 @@ import Home from "./pages/Home";
 import Register from "./pages/auth/Register";
 import Login from "./pages/auth/Login";
 import GameHome from "./pages/game/GameRouter";
+import AdminPage from "./pages/admin/AdminRoute";
 
 function App() {
   return (
@@ -14,6 +15,8 @@ function App() {
       <Route path="/auth/login" element={<Login />} />
       {/* Wildcard (*) is important for nested routes */}
       <Route path="/game/*" element={<GameHome />} />
+      
+      <Route path="/admin/*" element={<AdminPage />} />
     </Routes>
   );
 }

@@ -1,149 +1,149 @@
-import ActivityItem from "@/components/ActivityItem";
-import GlobalChat from "@/components/GlobalChat";   
-import { Box, Fish, GlobeIcon, Pickaxe, Shield, Text } from "lucide-react";
-import * as ScrollArea from "@radix-ui/react-scroll-area";
-import { Card, CardContent } from "@/components/ui/card";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 
+export default function TycoonDashboard() {
+  const [coins, setCoins] = useState(0);
+  const [level, setLevel] = useState(1);
+  const [xp, setXp] = useState(0);
+  const [messages, setMessages] = useState([]);
+  const [input, setInput] = useState("");
 
-export default function Overview() {
+  const handleActivity = () => {
+    setCoins((c) => c + 5);
+    setXp((x) => x + 10);
+    if (xp + 10 >= level * 100) {
+      setLevel((l) => l + 1);
+      setXp(0);
+    }
+  };
+
+  const sendMessage = () => {
+    if (!input.trim()) return;
+    setMessages((m) => [...m, { user: "Player", text: input }]);
+    setInput("");
+  };
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-      {/* LEFT COLUMN */}
-      <div className="space-y-4">
-        {/* Status Section */}
-        <Card className="dark">
-          <CardContent className="p-4">
-            <h2 className="text-xl font-bold flex items-center gap-2">
-              <Shield /> Status
-            </h2>
-            <div className="flex justify-end mt-4">
-              <Button className="bg-blue-500 text-white">Show full Status</Button>
+    <div className="min-h-screen bg-neutral-900 text-white p-6">
+      {/* Player Stats */}
+      <section className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <StatCard label="Coins" value={coins} />
+        <StatCard label="Level" value={level} />
+        <StatCard label="XP" value={xp} />
+      </section>
+
+      {/* Main Layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Left Column */}
+        <div className="space-y-6">
+          <Card className="bg-neutral-800 border-neutral-700">
+            <CardHeader>
+              <CardTitle>Status</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <p>Player is active.</p>
+              <Button className="bg-blue-600 hover:bg-blue-500">
+                View Full Status
+              </Button>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-neutral-800 border-neutral-700">
+            <CardHeader>
+              <CardTitle>Activities</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <ActivityButton label="Mining" onClick={handleActivity} />
+              <ActivityButton label="Fishing" onClick={handleActivity} />
+              <ActivityButton label="Exploring" onClick={handleActivity} />
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Middle Column */}
+        <Card className="bg-neutral-800 border-neutral-700">
+          <CardHeader>
+            <CardTitle>Tasks</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            <TaskItem text="Mine 10 times" />
+            <TaskItem text="Explore 10 times" />
+            <TaskItem text="Fish 10 times" />
+            <TaskItem text="Craft 10 items" />
+          </CardContent>
+        </Card>
+
+        {/* Right Column */}
+        <Card className="bg-neutral-800 border-neutral-700">
+          <CardHeader>
+            <CardTitle>Global Chat</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="h-56 overflow-y-auto border border-neutral-700 rounded p-2 mb-3">
+              {messages.length === 0 && (
+                <p className="text-neutral-500">No messages yet</p>
+              )}
+              {messages.map((m, i) => (
+                <p key={i}>
+                  <span className="text-blue-400">{m.user}:</span> {m.text}
+                </p>
+              ))}
+            </div>
+
+            <div className="flex gap-2">
+              <Input
+                className="bg-neutral-900 border-neutral-700"
+                placeholder="Type a message"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+              />
+              <Button onClick={sendMessage} className="bg-green-600 hover:bg-green-500">
+                Send
+              </Button>
             </div>
           </CardContent>
         </Card>
-
-        {/* Activities Section */}
-        <Card className="dark grid grid-cols-1 sm:grid-cols-2">
-          <CardContent className="p-4">
-            <h2 className="text-xl font-bold flex items-center gap-2">
-              <GlobeIcon /> Activities
-            </h2>
-
-              <ActivityItem
-                icon={<Pickaxe />}
-                tooltip={
-                  <>
-                    Upgrade your pickaxe to mine more efficiently! <br />
-                    Requirements to upgrade: <br />
-                    - Level 10 <br />
-                    - 500 Dollars <br />
-                    - 10 Iron <br />
-                    - 10 Wood <br />
-                    <Button>Upgrade</Button>
-                  </>
-                }
-                label="Start Mining"
-                // onClick={function () {
-                //   fetch("/api/activity/mining", { method: "POST" }).then((res) => {
-                //     if (res.ok) {
-                //       alert("Mining started!");
-                //     } else {
-                //       alert("Failed to start mining.");
-                //     }
-                //   });
-                // }}
-              />
-
-              <ActivityItem
-                icon={<Fish />}
-                tooltip={
-                  <>
-                    Upgrade this for more efficient Fishing! <br />
-                    Requirements to upgrade: <br />
-                    - Level 12 <br />
-                    - 300 Dollars <br />
-                    - 10 Iron <br />
-                    - 10 Wood <br />
-                    <Button>Upgrade</Button>
-                  </>
-                }
-                label="Start Fishing"
-              />
-
-              <ActivityItem
-                icon={<GlobeIcon />}
-                tooltip={
-                  <>
-                    Upgrade your pickaxe to mine more efficiently! <br />
-                    Requirements to upgrade: <br />
-                    - Level 10 <br />
-                    - 500 Dollars <br />
-                    - 10 Iron <br />
-                    - 10 Wood <br />
-                    <Button>Upgrade</Button>
-                  </>
-                }
-                label="Start Exploring"
-              />
-          </CardContent>
-
-          <CardContent className="p-4 pt-11">
-            {Array(3)
-              .fill(0)
-              .map((_, index) => (
-                <ActivityItem
-                  key={index}
-                  icon={<Pickaxe />}
-                  tooltip="Coming soon..."
-                  label="Coming Soon"
-                  disabled
-                />
-              ))}
-          </CardContent>
-        </Card>
       </div>
+    </div>
+  );
+}
 
-      {/* CENTER COLUMN */}
-      <div className="space-y-4">
+/* ---------- Small Components ---------- */
 
-        <Card className="dark p-2">
-          <h2 className="text-xl font-bold flex items-center">
-            <Box /> Tasks
-          </h2>
-          <ScrollArea.Root className="w-full h-64 overflow-hidden rounded-md border">
-            <ScrollArea.Viewport className="h-full w-full p-2">
-              {["Do mining 10 times", "Do exploring 10 times", "Do Fishing 10 times", "Craft any 10 items"].map(
-                (task) => (
-                  <Card key={task} className="mb-2">
-                    <CardContent className="p-4">
-                      <h3 className="text-lg font-semibold">{task}</h3>
-                    </CardContent>
-                  </Card>
-                )
-              )}
-            </ScrollArea.Viewport>
-            <ScrollArea.Scrollbar
-              orientation="vertical"
-              className="flex touch-none select-none p-0.5 transition-colors duration-160 ease-out hover:bg-gray-200"
-            >
-              <ScrollArea.Thumb className="flex-1 rounded-full bg-gray-400" />
-            </ScrollArea.Scrollbar>
-          </ScrollArea.Root>
-        </Card>
-      </div>
+function StatCard({ label, value }) {
+  return (
+    <Card className="bg-neutral-800 border-neutral-700 text-center">
+      <CardContent className="pt-6">
+        <p className="text-sm text-neutral-400">{label}</p>
+        <p className="text-2xl font-bold">{value}</p>
+      </CardContent>
+    </Card>
+  );
+}
 
-      {/* RIGHT COLUMN */}
-      <div>
-        <Card className="dark p-4">
-          <CardContent>
-            <h2 className="text-xl font-bold flex items-center gap-2 mb-2">
-              <Text /> Global Chat
-            </h2>
-            <GlobalChat />
-          </CardContent>
-        </Card>
-      </div>
+function ActivityButton({ label, onClick }) {
+  return (
+    <Button
+      onClick={onClick}
+      variant="secondary"
+      className="w-full bg-neutral-700 hover:bg-neutral-600"
+    >
+      Start {label}
+    </Button>
+  );
+}
+
+function TaskItem({ text }) {
+  return (
+    <div className="bg-neutral-700 rounded px-3 py-2 text-sm">
+      {text}
     </div>
   );
 }

@@ -12,7 +12,6 @@ export default function SignUp() {
   const navigate = useNavigate();
 
   // form states
-  const [showError, setShowError] = useState("")
   const [username, setUsername] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -31,6 +30,10 @@ export default function SignUp() {
     }
     ).then((response) => {
       console.log(response);
+      if (response.status === 201) {
+        alert("Registration successful! Please log in.");
+        navigate('/auth/login');
+      }
     }).catch((error) => {
       console.error("There was an error!", error);
       if (error.response) {

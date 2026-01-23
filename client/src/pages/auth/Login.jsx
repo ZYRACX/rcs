@@ -20,13 +20,17 @@ export default function SignIn() {
     axios.post("http://localhost:8000/api/login", {
       email: email,
       password: password,
-    }
+
+      }
     ).then((response) => {
       console.log(response);
       localStorage.setItem("userId", response.data.userId)
       navigate('/game/overview')
     }).catch((error) => {
       console.error("There was an error!", error);
+      if(error.response){
+        alert(error.response.data.error);
+      }
     });
   }
 
@@ -47,7 +51,7 @@ useEffect(() => {
             Welcome Back
           </CardTitle>
           <p className="text-muted-foreground text-sm mt-1">
-            Sign in to continue to ServNect
+            Sign in to continue to RCS
           </p>
         </CardHeader>
         <CardContent>
