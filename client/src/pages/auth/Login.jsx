@@ -3,6 +3,8 @@ import { useEffect, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 // import { useNavigate } from "react-router-dom"
 
+// import { account } from "@/appwrite"
+
 // components
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -17,6 +19,10 @@ export default function SignIn() {
 
   function handleSubmit(event) {
     event.preventDefault()
+  //  account.createEmailPasswordSession({
+  //   email: email,
+  //   password: password,
+  //  })
     axios.post("http://localhost:8000/api/login", {
       email: email,
       password: password,

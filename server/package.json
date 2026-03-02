@@ -4,18 +4,19 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon index.js"
+    "dev": "nodemon src/index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "module",
   "dependencies": {
-    "@prisma/client": "^6.19.2",
-    "bcrypt": "^6.0.0",
+    "appwrite": "^22.4.1",
+    "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
+    "dotenv": "^17.3.1",
     "express": "^5.1.0",
-    "nodemon": "^3.1.10",
-    "prisma": "^6.19.2"
+    "node-appwrite": "^22.1.2",
+    "nodemon": "^3.1.10"
   }
 }
