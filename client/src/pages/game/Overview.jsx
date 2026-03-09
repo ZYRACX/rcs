@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -7,21 +7,27 @@ import {
   CardContent,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import axios from "axios";
+import { set } from "zod";
 
 export default function TycoonDashboard() {
   const [coins, setCoins] = useState(0);
-  const [level, setLevel] = useState(1);
+  const [level, setLevel] = useState(0);
   const [xp, setXp] = useState(0);
+  console.log(coins, level, xp)
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
-
+  
+   function handleBalance () {
+    
+  }
   const handleActivity = () => {
-    setCoins((c) => c + 5);
-    setXp((x) => x + 10);
-    if (xp + 10 >= level * 100) {
-      setLevel((l) => l + 1);
-      setXp(0);
-    }
+    // setCoins((c) => c + 5);
+    // setXp((x) => x + 10);
+    // if (xp + 10 >= level * 100) {
+    //   setLevel((l) => l + 1);
+    //   setXp(0);
+    // }
   };
 
   const sendMessage = () => {
@@ -29,6 +35,18 @@ export default function TycoonDashboard() {
     setMessages((m) => [...m, { user: "Player", text: input }]);
     setInput("");
   };
+
+  useEffect(() => {
+    // Fetch balance from backend
+    axios.get("http://localhost:8000/game/playerinfo",{
+      withCredentials: true
+    }).then((response) => {
+      console.log(response.data.balance)
+      setCoins(response.data.balance)
+      setLevel(response.data.level)
+      setXp(response.data.experience)
+    })
+  }, [])
 
   return (
     <div className="min-h-screen bg-neutral-900 text-white p-6">
@@ -60,7 +78,7 @@ export default function TycoonDashboard() {
               <CardTitle>Activities</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
-              <ActivityButton label="Mining" onClick={handleActivity} />
+              <ActivityButton label="Mining" onClick={handleBalance} />
               <ActivityButton label="Fishing" onClick={handleActivity} />
               <ActivityButton label="Exploring" onClick={handleActivity} />
             </CardContent>

@@ -9,20 +9,19 @@ export default function InventoryPage() {
 
   // Fetch inventory
   const fetchInventory = async () => {
-    const res = await axios.post(
-      "http://localhost:8000/api/game/inventory",
-      {
-        userId: localStorage.getItem("userId"),
-      }
-    );
-
+    const res = await axios.get("http://localhost:8000/game/inventory", {withCredentials: true});
+    console.log(res.data)
     if (res.status === 200) {
-      setItems(res.data.items);
+      // setItems(res.data.items);
     }
   };
 
   useEffect(() => {
-    fetchInventory();
+    axios.get("http://localhost:8000/game/inventory", {withCredentials: true}).then((response) => {
+      console.log(response.data)
+    }).catch((error) => {
+      console.log(error)
+    })
   }, []);
 
   const filteredItems = items.filter((item) =>

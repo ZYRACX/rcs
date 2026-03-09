@@ -1,8 +1,8 @@
 import {Client, Account} from "appwrite"
 
 const client = new Client()
-    .setEndpoint(import.meta.env.VITE_APPWRITE_ENDPOINT) // Your API Endpoint
-    .setProject(import.meta.env.VITE_APPWRITE_PROJECT_NAME) // Your project ID
+    .setEndpoint("http://localhost/v1") // Your API Endpoint
+    .setProject("69987f4a0029b8b0b902") // Your project ID
 
 const account = new Account(client)
 

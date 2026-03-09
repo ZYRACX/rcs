@@ -8,10 +8,8 @@ const router = express.Router();
 // 
 router.post("/register", controller.WebRegisterController);
 
-//
-router.post("/login", controller.WebLoginController);
 
 // 
-router.get("/discord/register", controller.discordAuth);
+// router.get("/discord/register", controller.discordAuth);
 
 export default router;

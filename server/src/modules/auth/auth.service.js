@@ -1,45 +1,45 @@
-import { account, tablesDB, Query} from "../../utils/appwrite.js"
-import appwriteConfig from "../../config/appwrite.js"
+import { createAppwriteClient, ID } from "../../utils/appwrite.js"
+// import appwriteConfig from "../../config/appwrite.js"
 export async function register(username, email, password, trackerId) {
 
-    if (trackerId)  {
-        const existingTracker = await tablesDB.listRows({
-            databaseId: appwriteConfig.appwrite.databaseName,
-            tableId: appwriteConfig.appwrite.DEVICE_TABLE,
-            queries: [
-                Query.equal("trackerId", trackerId)
-            ]
-        })
-        existingTracker.rows.forEach(async (tracker) => {
-            console.log(tracker)
-        })
+  // const existingTracker = await tablesDB.listRows({
+  //     databaseId: appwriteConfig.appwrite.databaseName,
+  //     tableId: appwriteConfig.appwrite.DEVICE_TABLE,
+  //     queries: [
+  //         Query.equal("trackerId", trackerId)
+  //     ]
+  // })
+  // existingTracker.rows.forEach(async (tracker) => {
+  //     console.log(tracker)
+  // })
 
-    try {
-        const user = await account.create({email, password, name: username});
-
-        return {
-            userId: user.$id, 
-            username: user.name
-        };
-
-    } catch (error) {       
-        if (error.code !== 404) {
-            console.error("Error checking user existence:", error);
-            throw new Error("Database error");
-        }  
-    } 
-}}
-
-export async function login(email, password) {
   try {
-    const session = await account.createEmailPasswordSession(email, password);
-    const user = await account.get();
-    
+    const { account } = createAppwriteClient("admin")
+
+    const user = await account.create({ userId: ID.unique(), email: email, password: password, name: username });
     return {
       userId: user.$id,
       username: user.name
     };
+
+
+
   } catch (error) {
-    throw error;
+    console.error("Auth register error:", error);
+    if (error.code == 400 && error.type == 'general_argument_invalid') {
+      return {
+        code: error.code,
+        error: "Password must be between 8 and 265 characters long, and should not be one of the commonly used password."
+      }
+    }
+
+    if (error.code == 409 && error.type == 'user_already_exists') {
+      return {
+        code: error.code,
+        error: "User already exists"
+      }
+    }
+
+
   }
 }

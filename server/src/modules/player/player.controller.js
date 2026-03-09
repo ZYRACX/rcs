@@ -1,16 +1,15 @@
-import { createAppwriteClient, Query } from "../../utils/appwrite.js";
-import appwriteConfig from "../../config/appwrite.js";
 import {request, response} from "express"
-
+import { createAppwriteClient, Query } from "../../utils/appwrite.js"
+import appwriteConfig from "../../config/appwrite.js"
 /**
  * 
  * @param {request} req 
  * @param {response} res 
  * @returns 
  */
-export async function getPlayerInventory(req, res) {
+export async function getPlayerStats(req, res) {
     try{
-         const rawSessionCookie = req.headers.cookie
+        const rawSessionCookie = req.headers.cookie
         // console.log(rawSessionCookie.split("=")[1])
         const session = rawSessionCookie.split("=")[1]
 
@@ -21,14 +20,21 @@ export async function getPlayerInventory(req, res) {
 
         const result = await tablesDB.listRows({
             databaseId: appwriteConfig.appwrite.databaseId,
-            tableId: appwriteConfig.appwrite.INVENTORY_TABLE,
+            tableId: appwriteConfig.appwrite.USER_TABLE,
             queries: [
                 Query.equal("userId", user.$id),
                 // Query.limit(1)
             ]
         })
+        
+        const balance = result.rows[0].balance;
+        const level = result.rows[0].level;
+        const experience = result.rows[0].experience;
 
-        console.log(result.rows[0])
-
-    } catch(error){}
+        return res.status(200).json({balance, level, experience})
+        
+    }
+    catch(error){
+        return res.status(500).json({error: "Failed to fetch player stats"})
+    }
 }

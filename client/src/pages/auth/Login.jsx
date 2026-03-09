@@ -3,7 +3,7 @@ import { useEffect, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 // import { useNavigate } from "react-router-dom"
 
-// import { account } from "@/appwrite"
+import { account } from "@/appwrite"
 
 // components
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -19,34 +19,43 @@ export default function SignIn() {
 
   function handleSubmit(event) {
     event.preventDefault()
-  //  account.createEmailPasswordSession({
-  //   email: email,
-  //   password: password,
-  //  })
-    axios.post("http://localhost:8000/api/login", {
-      email: email,
-      password: password,
+   account.createEmailPasswordSession({
+    email: email,
+    password: password,
+   }).then((response) => {
+    // console.log(response);
+    navigate('/game/overview')
+   }).catch((error) => {
+    console.error("There was an error!", error);
+    alert("Error: " + error.message)
+   })
 
-      }
-    ).then((response) => {
-      console.log(response);
-      localStorage.setItem("userId", response.data.userId)
-      navigate('/game/overview')
-    }).catch((error) => {
-      console.error("There was an error!", error);
-      if(error.response){
-        alert(error.response.data.error);
-      }
-    });
+    // axios.post("http://localhost:8000/api/login", {
+    //   email: email,
+    //   password: password,
+
+    //   }
+    // ).then((response) => {
+    //   console.log(response);
+    //   localStorage.setItem("userId", response.data.userId)
+    //   navigate('/game/overview')
+    // }).catch((error) => {
+    //   console.error("There was an error!", error);
+    //   if(error.response){
+    //     alert(error.response.data.error);
+    //   }
+    // });
   }
 
 useEffect(() => {
-  const userId = localStorage.getItem("userId");
-  if (userId) {
-    console.log("User is already logged in with userId:", userId);
-    // You can redirect the user to a different page if needed
-    navigate('/game/overview');
-  }
+  account.get().then((response) => {
+    console.log("User is already logged");
+    console.log(response)
+    navigate('/game/overview')
+  }).catch((error) => {
+    console.log("No active session found");
+    // console.error(error)
+  })
 }, [navigate]);
 
   return (

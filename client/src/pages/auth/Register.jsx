@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react"
 import axios from "axios"
 import { Link, useNavigate } from "react-router-dom"
-
 // components
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -20,26 +19,53 @@ export default function SignUp() {
   // form submit handler
   function handleSubmit(event) {
     event.preventDefault()
-    console.log(username, email, password, confirmPassword)
-    // Handle form submission logic here
-    axios.post("http://localhost:8000/api/register", {
+    // console.log(username, email, password, confirmPassword)
+
+    if(!username || !email || !password || !confirmPassword) {
+      alert("Please fill in all fields!");
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      alert("Passwords do not match!");
+      return;
+    }
+
+    axios.post("http://localhost:8000/auth/register", {
       username: username,
       email: email,
       password: password,
-      confirmPassword: confirmPassword,
-    }
-    ).then((response) => {
-      console.log(response);
-      if (response.status === 201) {
+    }).then((response) => {
+      if(response.status === 201) {
         alert("Registration successful! Please log in.");
         navigate('/auth/login');
       }
     }).catch((error) => {
       console.error("There was an error!", error);
       if (error.response) {
-        alert("Error: " + error.response.data.error);
+        alert("Error: " + error.response.data.error_message);
       }
     });
+
+    // Handle form submission logic here
+    // axios.post("http://localhost:8000/api/register", {
+    //   username: username,
+    //   email: email,
+    //   password: password,
+    //   confirmPassword: confirmPassword,
+    // }
+    // ).then((response) => {
+    //   console.log(response);
+    //   if (response.status === 201) {
+    //     alert("Registration successful! Please log in.");
+    //     navigate('/auth/login');
+    //   }
+    // }).catch((error) => {
+    //   console.error("There was an error!", error);
+    //   if (error.response) {
+    //     alert("Error: " + error.response.data.error);
+    //   }
+    // });
   }
 
   useEffect(() => {

@@ -1,14 +1,39 @@
-import {Databases, Account, ID, TablesDB, Client, Query} from "node-appwrite"
+import {Account, ID, TablesDB, Client, Query} from "node-appwrite"
 import dotenv from 'dotenv';
 dotenv.config()
 
+
+
+const {APPWRITE_PROJECT_ID, APPWRITE_PROJECT_NAME, APPWRITE_ENDPOINT, APPWRITE_KEY} = process.env;
+
+/**
+ * 
+ * @param {"admin" | "user"} type 
+ * @param {String} session 
+ * @returns Account, TablesDB
+ */
+
+export function createAppwriteClient(type, session) {
 const client = new Client()
-    .setEndpoint(process.env.APPWRITE_ENDPOINT)
-    .setProject(process.env.APPWRITE_PROJECT_ID)
-    .setKey(process.env.APPWRITE_API_KEY);
+    .setEndpoint(APPWRITE_ENDPOINT)
+    .setProject(APPWRITE_PROJECT_ID)
 
-const databases = new Databases(client);
-const account = new Account(client);
-const tablesDB = new TablesDB(client);
+    if(type === "admin") {
+      client.setKey(APPWRITE_KEY);
+    }
 
-export { databases, account, tablesDB, ID, Query};
+    if(type === "user" && session) {
+      client.setSession(session);
+    }
+
+    return {
+      get account() {
+        return new Account(client);
+      },
+      get tablesDB() {
+        return new TablesDB(client);
+      }
+    }
+}
+
+export {ID, Query};
