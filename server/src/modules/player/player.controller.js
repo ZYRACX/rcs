@@ -1,6 +1,7 @@
 import {request, response} from "express"
 import { createAppwriteClient, Query } from "../../utils/appwrite.js"
 import appwriteConfig from "../../config/appwrite.js"
+import {extractSessionCookie} from "../../utils/SessionCookieExtractor.js"
 /**
  * 
  * @param {request} req 
@@ -9,10 +10,9 @@ import appwriteConfig from "../../config/appwrite.js"
  */
 export async function getPlayerStats(req, res) {
     try{
-        const rawSessionCookie = req.headers.cookie
-        // console.log(rawSessionCookie.split("=")[1])
-        const session = rawSessionCookie.split("=")[1]
 
+        const session = extractSessionCookie(req)
+        console.log("Session Cookie:", session);
         const {account} = createAppwriteClient("user", session);
         const {tablesDB} = createAppwriteClient("admin");
 
@@ -25,7 +25,10 @@ export async function getPlayerStats(req, res) {
                 Query.equal("userId", user.$id),
                 // Query.limit(1)
             ]
-        })
+        }).catch((error) => {
+            console.error("Error fetching player stats:", error);
+            throw new Error("Failed to fetch player stats");
+        });
         
         const balance = result.rows[0].balance;
         const level = result.rows[0].level;
@@ -35,6 +38,7 @@ export async function getPlayerStats(req, res) {
         
     }
     catch(error){
+        console.error("Error fetching player stats:", error);
         return res.status(500).json({error: "Failed to fetch player stats"})
     }
 }

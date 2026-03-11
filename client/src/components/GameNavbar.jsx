@@ -1,6 +1,7 @@
 import { Gem, LogOut as LucideLogOut } from "lucide-react"
 import { Button } from "./ui/button"
 import { Card, CardContent } from "./ui/card"
+import { account } from "@/appwrite"
 import {
     Tabs,
     TabsList,
@@ -45,7 +46,7 @@ export default function GameNavbar(props) {
         <h1 className="text-2xl font-bold">Tycoon Game</h1>
         <div className="flex gap-3">
           <button className="px-4 py-2 rounded bg-neutral-700">Profile</button>
-          <button className="px-4 py-2 rounded bg-red-600">Logout</button>
+          <button className="px-4 py-2 rounded bg-red-600" onClick={() => {account.deleteSession({sessionId: "current"}) }}>Logout</button>
         </div>
       </header>
 

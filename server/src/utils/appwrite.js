@@ -23,6 +23,9 @@ const client = new Client()
     }
 
     if(type === "user" && session) {
+       if (!session) {
+      throw new Error("User client requires a session");
+    }
       client.setSession(session);
     }
 

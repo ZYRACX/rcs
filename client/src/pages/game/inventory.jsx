@@ -4,27 +4,20 @@ import { useEffect, useState } from "react";
 
 export default function InventoryPage() {
   const [items, setItems] = useState([]);
-  const [sellQuantities, setSellQuantities] = useState({});
   const [search, setSearch] = useState("");
 
   // Fetch inventory
-  const fetchInventory = async () => {
-    const res = await axios.get("http://localhost:8000/game/inventory", {withCredentials: true});
-    console.log(res.data)
-    if (res.status === 200) {
-      // setItems(res.data.items);
-    }
-  };
 
   useEffect(() => {
     axios.get("http://localhost:8000/game/inventory", {withCredentials: true}).then((response) => {
       console.log(response.data)
+      setItems(response.data.inventory);
     }).catch((error) => {
       console.log(error)
     })
   }, []);
 
-  const filteredItems = items.filter((item) =>
+  const filteredItems   = items.filter((item) =>
     item.name.toLowerCase().includes(search.toLowerCase())
   );
 
@@ -57,7 +50,7 @@ export default function InventoryPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
           {filteredItems.map((item) => (
             <div
-              key={item.id}
+              key={item.itemId}
               className="bg-neutral-900 border border-neutral-800 rounded-lg p-4"
             >
               {/* Item Header */}
@@ -70,7 +63,7 @@ export default function InventoryPage() {
 
               {/* Meta */}
               <p className="text-sm text-neutral-500 mb-4">
-                Base value: ${item.baseValue}
+                Base value: ${item.itemBaseValue}
               </p>
 
               {/* Action Buttons */}
