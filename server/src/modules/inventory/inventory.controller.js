@@ -2,7 +2,7 @@ import { createAppwriteClient, Query } from "../../utils/appwrite.js";
 import appwriteConfig from "../../config/appwrite.js";
 import { request, response } from "express";
 import { extractSessionCookie } from "../../utils/SessionCookieExtractor.js";
-
+import * as inventoryService from "./inventory.service.js";
 /**
  * Get the authenticated player's inventory.
  *
@@ -60,13 +60,15 @@ export async function getPlayerInventory(req, res) {
          * Fetch all inventory rows belonging to the user
          * Each row represents an item entry in the player's inventory
          */
-        const inventoryResult = await tablesDB.listRows({
-            databaseId: appwriteConfig.appwrite.databaseId,
-            tableId: appwriteConfig.appwrite.INVENTORY_TABLE,
-            queries: [
-                Query.equal("userId", user.$id)
-            ]
-        });
+        const inventoryResult = await inventoryService.getPlayerInventory(user.$id, tablesDB);
+        
+        // const inventoryResult = await tablesDB.listRows({
+        //     databaseId: appwriteConfig.appwrite.databaseId,
+        //     tableId: appwriteConfig.appwrite.INVENTORY_TABLE,
+        //     queries: [
+        //         Query.equal("userId", user.$id)
+        //     ]
+        // });
 
         /**
          * Fetch all item definitions from the ITEM_TABLE
@@ -76,10 +78,11 @@ export async function getPlayerInventory(req, res) {
          * - base value
          * - other item attributes
          */
-        const items = await tablesDB.listRows({
-            databaseId: appwriteConfig.appwrite.databaseId,
-            tableId: appwriteConfig.appwrite.ITEM_TABLE,
-        });
+        const itemsResult = await inventoryService.getItems(tablesDB);
+        // const items = await tablesDB.listRows({
+        //     databaseId: appwriteConfig.appwrite.databaseId,
+        //     tableId: appwriteConfig.appwrite.ITEM_TABLE,
+        // });
 
         /**
          * Iterate through player's inventory rows
@@ -90,7 +93,7 @@ export async function getPlayerInventory(req, res) {
             /**
              * Find the item metadata using itemId
              */
-            const item = items.rows.find(
+            const item = itemsResult.rows.find(
                 item => item.$id === playerInventoryItem.itemId
             );
 
