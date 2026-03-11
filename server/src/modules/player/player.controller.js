@@ -1,7 +1,8 @@
 import {request, response} from "express"
-import { createAppwriteClient, Query } from "../../utils/appwrite.js"
-import appwriteConfig from "../../config/appwrite.js"
+import { createAppwriteClient } from "../../utils/appwrite.js"
+
 import {extractSessionCookie} from "../../utils/SessionCookieExtractor.js"
+import * as playerService from "./player.service.js"
 /**
  * 
  * @param {request} req 
@@ -12,27 +13,15 @@ export async function getPlayerStats(req, res) {
     try{
 
         const session = extractSessionCookie(req)
-        console.log("Session Cookie:", session);
         const {account} = createAppwriteClient("user", session);
         const {tablesDB} = createAppwriteClient("admin");
-
-        const user = await account.get();
-
-        const result = await tablesDB.listRows({
-            databaseId: appwriteConfig.appwrite.databaseId,
-            tableId: appwriteConfig.appwrite.USER_TABLE,
-            queries: [
-                Query.equal("userId", user.$id),
-                // Query.limit(1)
-            ]
-        }).catch((error) => {
-            console.error("Error fetching player stats:", error);
-            throw new Error("Failed to fetch player stats");
-        });
+        const userId = (await account.get()).$id
         
-        const balance = result.rows[0].balance;
-        const level = result.rows[0].level;
-        const experience = result.rows[0].experience;
+        const playerinfo = await playerService.getPlayerInfo(userId, tablesDB);
+        
+        const balance = playerinfo.balance;
+        const level = playerinfo.level;
+        const experience = playerinfo.experience;
 
         return res.status(200).json({balance, level, experience})
         
