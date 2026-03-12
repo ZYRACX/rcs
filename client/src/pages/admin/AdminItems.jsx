@@ -1,216 +1,326 @@
-import React, { useState, useEffect } from "react";
 import axios from "axios";
+import React, { useState, useEffect } from "react";
 
 const AdminItems = () => {
-  const [search, setSearch] = useState("");
-  const [items, setItems] = useState([]);
-  const [loading, setLoading] = useState(false);
 
-  // Modal state
+  const [items, setItems] = useState([]);
+  const [filteredItems, setFilteredItems] = useState([]);
+  const [search, setSearch] = useState("");
+
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalMode, setModalMode] = useState("add"); // add or edit
+  const [modalMode, setModalMode] = useState("add");
+
   const [currentItem, setCurrentItem] = useState({
-    itemId: null,
+    $id: null,
     itemName: "",
-    itemValue: "",
-    isCraftable: false,
+    itemBaseValue: 1,
+    itemAltId: "",
+    chanceOfGetting: 0,
+    wayToObtain: []
   });
 
-  const fetchItems = async (query = "") => {
-    try {
-      setLoading(true);
-      const res = await axios.get(`http://localhost:8000/api/admin/items?q=${query}`);
-      setItems(res.data);
-    } catch (err) {
-      console.error("Error fetching items:", err.response?.data || err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    fetchItems();
+    axios.get("http://localhost:8000/admin/items", { withCredentials: true }).then((res) => {
+      setItems(res.data.items);
+      setFilteredItems(res.data.items);
+    }).catch((error) => {
+      console.log("Error", error)
+    })
+    // setItems(sampleItems);
+    // setFilteredItems(sampleItems);
   }, []);
 
   const handleSearch = (e) => {
     e.preventDefault();
-    fetchItems(search);
+
+    const filtered = items.filter(item =>
+      item.itemName.toLowerCase().includes(search.toLowerCase())
+    );
+
+    setFilteredItems(filtered);
   };
 
   const openAddModal = () => {
     setModalMode("add");
-    setCurrentItem({ itemId: null, itemName: "", itemValue: "", isCraftable: false });
+
+    setCurrentItem({
+      $id: null,
+      itemName: "",
+      itemBaseValue: 1,
+      itemAltId: "",
+      ChanceOfGetting: 0,
+      wayToObtain: []
+    });
+
     setIsModalOpen(true);
   };
 
   const openEditModal = (item) => {
     setModalMode("edit");
-    setCurrentItem({
-      itemId: item.itemId,
-      itemName: item.itemName,
-      itemValue: item.itemValue,
-      isCraftable: item.isCraftable === 1 || item.isCraftable === true,
-    });
+    setCurrentItem(item);
     setIsModalOpen(true);
   };
 
-  const handleDelete = async (itemId) => {
-    if (!window.confirm("Are you sure you want to delete this item?")) return;
+  const handleDelete = ($id) => {
+    if (!window.confirm("Delete this item?")) return;
 
-    try {
-      await axios.delete(`http://localhost:8000/api/admin/items/${itemId}`);
-      alert("Item deleted!");
-      fetchItems(search);
-    } catch (err) {
-      console.error("Delete failed:", err.response?.data || err.message);
-    }
+    const updated = items.filter(item => item.$id !== $id);
+
+    setItems(updated);
+    setFilteredItems(updated);
   };
 
-  const handleModalSubmit = async (e) => {
+  const handleModalSubmit = (e) => {
     e.preventDefault();
-    const { itemId, itemName, itemValue, isCraftable } = currentItem;
 
-    try {
-      if (modalMode === "add") {
-        await axios.post("http://localhost:8000/api/admin/items", { itemName, itemValue, isCraftable });
-        alert("Item added!");
-      } else {
-        await axios.put(`http://localhost:8000/api/admin/items/${itemId}`, { itemName, itemValue, isCraftable });
-        alert("Item updated!");
-      }
-      setIsModalOpen(false);
-      fetchItems(search);
-    } catch (err) {
-      console.error("Operation failed:", err.response?.data || err.message);
+    if (modalMode === "add") {
+
+      const newItem = {
+        ...currentItem,
+        $id: Date.now().toString()
+      };
+
+      const updated = [...items, newItem];
+
+      setItems(updated);
+      setFilteredItems(updated);
+
+    } else {
+
+      axios.put(`http://localhost:8000/admin/items/${currentItem.$id}`, {
+        itemName: currentItem.itemName,
+        itemAltId: currentItem.itemAltId,
+        itemBaseValue: currentItem.itemBaseValue,
+        ChanceOfGetting: currentItem.ChanceOfGetting,
+        wayToObtain: currentItem.wayToObtain
+      }, { withCredentials: true }).then(() => {
+        const updated = items.map(item =>
+          item.$id === currentItem.$id ? currentItem : item
+        )
+        setItems(updated);
+        setFilteredItems(updated);
+      }).catch((error) => {
+        console.log("Update error:", error);
+      })
+
+
+
     }
+
+    setIsModalOpen(false);
   };
+
+  const handleWayChange = (e) => {
+
+    const values = [...e.target.selectedOptions].map(o => o.value);
+
+    setCurrentItem({
+      ...currentItem,
+      wayToObtain: values
+    });
+
+  };
+
+  useEffect(() => {
+    axios.get("/api/items")
+  }, [])
 
   return (
     <div className="min-h-screen bg-gray-900 text-gray-200 p-6">
-      <h2 className="text-3xl font-bold mb-6">Admin - Items</h2>
+
+      <h2 className="text-3xl font-bold mb-6">Admin Items</h2>
+
+      {/* SEARCH */}
 
       <div className="flex mb-6 gap-2">
+
         <form onSubmit={handleSearch} className="flex flex-1">
+
           <input
             type="text"
             placeholder="Search items..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="flex-1 p-2 bg-gray-800 border border-gray-700 rounded-l-md text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="flex-1 p-2 bg-gray-800 border border-gray-700 rounded-l-md"
           />
+
           <button
             type="submit"
-            className="bg-blue-600 text-white px-4 rounded-r-md hover:bg-blue-700 transition"
+            className="bg-blue-600 px-4 rounded-r-md hover:bg-blue-700"
           >
             Search
           </button>
+
         </form>
+
         <button
           onClick={openAddModal}
-          className="bg-green-600 text-white px-4 rounded hover:bg-green-700 transition"
+          className="bg-green-600 px-4 rounded hover:bg-green-700"
         >
           Add Item
         </button>
+
       </div>
 
-      {loading ? (
-        <p>Loading items...</p>
-      ) : items.length === 0 ? (
-        <p>No items found.</p>
-      ) : (
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse shadow rounded-lg">
-            <thead className="bg-gray-800 text-gray-300">
-              <tr>
-                <th className="p-3 border-b border-gray-700">ID</th>
-                <th className="p-3 border-b border-gray-700">Name</th>
-                <th className="p-3 border-b border-gray-700">Value</th>
-                <th className="p-3 border-b border-gray-700">Craftable</th>
-                <th className="p-3 border-b border-gray-700">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {items.map((item) => (
-                <tr key={item.itemId} className="hover:bg-gray-700">
-                  <td className="p-3 border-b border-gray-700">{item.itemId}</td>
-                  <td className="p-3 border-b border-gray-700">{item.itemName}</td>
-                  <td className="p-3 border-b border-gray-700">{item.itemValue}</td>
-                  <td className="p-3 border-b border-gray-700">{item.isCraftable ? "Yes" : "No"}</td>
-                  <td className="p-3 border-b border-gray-700 flex gap-2">
-                    <button
-                      onClick={() => openEditModal(item)}
-                      className="bg-yellow-500 text-gray-900 px-3 py-1 rounded hover:bg-yellow-600 transition"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleDelete(item.itemId)}
-                      className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 transition"
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+      {/* TABLE */}
 
-      {/* Modal */}
+      <div className="overflow-x-auto">
+
+        <table className="w-full border-collapse rounded-lg">
+
+          <thead className="bg-gray-800">
+
+            <tr>
+              <th className="p-3">ID</th>
+              <th className="p-3">Name</th>
+              <th className="p-3">Alt ID</th>
+              <th className="p-3">Base Value</th>
+              <th className="p-3">Chance</th>
+              <th className="p-3">Way To Obtain</th>
+              <th className="p-3">Actions</th>
+            </tr>
+
+          </thead>
+
+          <tbody>
+
+            {filteredItems.map(item => (
+
+              <tr key={item.$id} className="hover:bg-gray-700">
+
+                <td className="p-3">{item.$id}</td>
+
+                <td className="p-3">{item.itemName}</td>
+
+                <td className="p-3">{item.itemAltId}</td>
+
+                <td className="p-3">{item.itemBaseValue}</td>
+
+                <td className="p-3">{item.chanceOfGetting}</td>
+
+                <td className="p-3">
+                  {item.wayToObtain.join(", ")}
+                </td>
+
+                <td className="p-3 flex gap-2">
+
+                  <button
+                    onClick={() => openEditModal(item)}
+                    className="bg-yellow-500 text-black px-3 py-1 rounded"
+                  >
+                    Edit
+                  </button>
+
+                  <button
+                    onClick={() => handleDelete(item.$id)}
+                    className="bg-red-600 px-3 py-1 rounded"
+                  >
+                    Delete
+                  </button>
+
+                </td>
+
+              </tr>
+
+            ))}
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+      {/* MODAL */}
+
       {isModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70 z-50">
-          <div className="bg-gray-800 rounded-lg p-6 w-96">
-            <h3 className="text-xl font-bold mb-4">{modalMode === "add" ? "Add Item" : "Edit Item"}</h3>
-            <form onSubmit={handleModalSubmit} className="space-y-4">
-              <div>
-                <label className="block mb-1">Item Name</label>
-                <input
-                  type="text"
-                  value={currentItem.itemName}
-                  onChange={(e) => setCurrentItem({ ...currentItem, itemName: e.target.value })}
-                  className="w-full p-2 bg-gray-700 text-gray-200 border border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block mb-1">Item Value</label>
-                <input
-                  type="number"
-                  value={currentItem.itemValue}
-                  onChange={(e) => setCurrentItem({ ...currentItem, itemValue: e.target.value })}
-                  className="w-full p-2 bg-gray-700 text-gray-200 border border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  required
-                />
-              </div>
-              <div className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  checked={currentItem.isCraftable}
-                  onChange={(e) => setCurrentItem({ ...currentItem, isCraftable: e.target.checked })}
-                  className="accent-blue-500"
-                />
-                <label>Craftable</label>
-              </div>
-              <div className="flex justify-end gap-2 mt-4">
+
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70">
+
+          <div className="bg-gray-800 p-6 rounded-lg w-96">
+
+            <h3 className="text-xl mb-4 font-bold">
+              {modalMode === "add" ? "Add Item" : "Edit Item"}
+            </h3>
+
+            <form onSubmit={handleModalSubmit} className="space-y-3">
+
+              <input
+                type="text"
+                placeholder="Item Name"
+                value={currentItem.itemName}
+                onChange={(e) => setCurrentItem({ ...currentItem, itemName: e.target.value })}
+                className="w-full p-2 bg-gray-700 rounded"
+                required
+              />
+
+              <input
+                type="text"
+                placeholder="Item Alt ID"
+                value={currentItem.itemAltId}
+                onChange={(e) => setCurrentItem({ ...currentItem, itemAltId: e.target.value })}
+                className="w-full p-2 bg-gray-700 rounded"
+                required
+              />
+
+              <input
+                type="number"
+                placeholder="Base Value"
+                value={currentItem.itemBaseValue}
+                onChange={(e) => setCurrentItem({ ...currentItem, itemBaseValue: Number(e.target.value) })}
+                className="w-full p-2 bg-gray-700 rounded"
+              />
+
+              <input
+                type="number"
+                step="0.01"
+                placeholder="Chance Of Getting"
+                value={currentItem.ChanceOfGetting}
+                onChange={(e) => setCurrentItem({ ...currentItem, ChanceOfGetting: Number(e.target.value) })}
+                className="w-full p-2 bg-gray-700 rounded"
+                required
+              />
+
+              <select
+                multiple
+                value={currentItem.wayToObtain}
+                onChange={handleWayChange}
+                className="w-full p-2 bg-gray-700 rounded"
+              >
+
+                <option value="Mining">Mining</option>
+                <option value="Crafting">Crafting</option>
+                <option value="Loot">Loot</option>
+                <option value="Trading">Trading</option>
+
+              </select>
+
+              <div className="flex justify-end gap-2">
+
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition"
+                  className="bg-gray-600 px-4 py-2 rounded"
                 >
                   Cancel
                 </button>
+
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
+                  className="bg-green-600 px-4 py-2 rounded"
                 >
                   {modalMode === "add" ? "Add" : "Update"}
                 </button>
+
               </div>
+
             </form>
+
           </div>
+
         </div>
+
       )}
+
     </div>
   );
 };
