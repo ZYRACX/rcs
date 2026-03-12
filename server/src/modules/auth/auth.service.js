@@ -2,17 +2,6 @@ import { createAppwriteClient, ID } from "../../utils/appwrite.js"
 // import appwriteConfig from "../../config/appwrite.js"
 export async function register(username, email, password, trackerId) {
 
-  // const existingTracker = await tablesDB.listRows({
-  //     databaseId: appwriteConfig.appwrite.databaseName,
-  //     tableId: appwriteConfig.appwrite.DEVICE_TABLE,
-  //     queries: [
-  //         Query.equal("trackerId", trackerId)
-  //     ]
-  // })
-  // existingTracker.rows.forEach(async (tracker) => {
-  //     console.log(tracker)
-  // })
-
   try {
     const { account } = createAppwriteClient("admin")
 
