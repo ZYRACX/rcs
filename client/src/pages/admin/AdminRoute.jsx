@@ -10,11 +10,11 @@ import { useNavigate } from "react-router-dom";
 export default function AdminPage() {
   const navigate = useNavigate()
   useEffect(() => {
-    axios.get("http://localhost:8000/admin/", { withCredentials: true }).then(() => {
-
+    axios.get("http://localhost:8000/admin/", { withCredentials: true }).then((res) => {
+      if(res.status === 401) navigate("/")
     }).catch((error) =>{
       console.log("Admin page error:", error);
-      if(error) navigate("/")
+      // if(error) navigate("/")
     })
   },[navigate])
 
