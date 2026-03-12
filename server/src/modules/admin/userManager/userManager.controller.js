@@ -1,0 +1,1 @@
+export async function getAllPlayers(req, res) {}
