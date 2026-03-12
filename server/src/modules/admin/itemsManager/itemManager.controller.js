@@ -1,9 +1,10 @@
-import { response } from "express";
+import {request, response } from "express";
+import {ID} from "node-appwrite"
 import { createAppwriteClient } from "../../../utils/appwrite.js";
 import appwrite from "../../../config/appwrite.js";
 /**
  * 
- * @param {*} req 
+ * @param {request} req 
  * @param {response} res 
  */
 export async function getAllItems(req, res){
