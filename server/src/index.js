@@ -20,24 +20,10 @@ const corsOptions = {
 };
 
 // Middlewares
-app.use(cookieParser());
 app.use(cors(corsOptions));
 app.use(json());
+app.use(cookieParser());
 const PORT = process.env.PORT || 8000;
-
-// app.use((req, res, next) => {
-//     let trackerId = req.cookies.tracker_id;
-//     if (!trackerId) {
-//         trackerId = GenerateTrackerID();
-//         res.cookie('tracker_id', trackerId, { 
-//             httpOnly: true, 
-//             sameSite: 'strict' 
-//         });
-//     }
-//     console.log("Tracker ID:", trackerId);
-//     req.trackerId = trackerId;
-//     next();
-// });
 
 
 app.get('/', (req, res) => {
