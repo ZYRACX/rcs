@@ -42,13 +42,12 @@ const AdminItems = () => {
 
   const openAddModal = () => {
     setModalMode("add");
-
     setCurrentItem({
       $id: null,
       itemName: "",
       itemBaseValue: 1,
       itemAltId: "",
-      ChanceOfGetting: 0,
+      chanceOfGetting: 0,
       wayToObtain: []
     });
 
@@ -81,15 +80,27 @@ const AdminItems = () => {
 
     if (modalMode === "add") {
 
-      const newItem = {
-        ...currentItem,
-        $id: Date.now().toString()
-      };
+      axios.post("http://localhost:8000/admin/items/item/add",
+    {
+      itemName: currentItem.itemName,
+      itemAltId: currentItem.itemAltId,
+      itemBaseValue: currentItem.itemBaseValue,
+      chanceOfGetting: currentItem.chanceOfGetting,
+      wayToObtain: currentItem.wayToObtain
+    },
+    { withCredentials: true }
+  ).then((res) => {
+    alert(res.data.message)
+    const newItem = res.data.item;
 
-      const updated = [...items, newItem];
+    const updated = [...items, newItem];
 
-      setItems(updated);
-      setFilteredItems(updated);
+    setItems(updated);
+    setFilteredItems(updated);
+  }).catch((error) => {
+    console.log("Add item error:", error);
+  });
+
 
     } else {
 
@@ -97,7 +108,7 @@ const AdminItems = () => {
         itemName: currentItem.itemName,
         itemAltId: currentItem.itemAltId,
         itemBaseValue: currentItem.itemBaseValue,
-        ChanceOfGetting: currentItem.ChanceOfGetting,
+        chanceOfGetting: currentItem.chanceOfGetting,
         wayToObtain: currentItem.wayToObtain
       }, { withCredentials: true }).then(() => {
         const updated = items.map(item =>
