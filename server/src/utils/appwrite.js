@@ -19,6 +19,9 @@ const client = new Client()
     .setProject(APPWRITE_PROJECT_ID)
 
     if(type === "admin") {
+      if(!APPWRITE_KEY) {
+        throw new Error("Admin client requires APPWRITE_KEY");
+      }
       client.setKey(APPWRITE_KEY);
     }
 
