@@ -9,7 +9,13 @@ const AdminItems = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState("add");
-
+const WAY_OPTIONS = [
+  "mineable",
+  "craftable",
+  "fishery",
+  "explorable",
+  "harvestable"
+];
   const [currentItem, setCurrentItem] = useState({
     $id: null,
     itemName: "",
@@ -129,18 +135,29 @@ const AdminItems = () => {
 
   const handleWayChange = (e) => {
 
-    const values = [...e.target.selectedOptions].map(o => o.value);
+    const value = e.target.value;
+    const checked = e.target.checked;
+    // const values = [...e.target.selectedOptions].map(o => o.value);
 
-    setCurrentItem({
-      ...currentItem,
-      wayToObtain: values
-    });
+    setCurrentItem((prev) => {
+
+    if (checked) {
+      return {
+        ...prev,
+        wayToObtain: [...prev.wayToObtain, value]
+      };
+    }
+
+    return {
+      ...prev,
+      wayToObtain: prev.wayToObtain.filter(v => v !== value)
+    };
+
+  });
 
   };
 
-  useEffect(() => {
-    axios.get("/api/items")
-  }, [])
+
 
   return (
     <div className="min-h-screen bg-gray-900 text-gray-200 p-6">
@@ -291,25 +308,35 @@ const AdminItems = () => {
                 type="number"
                 step="0.01"
                 placeholder="Chance Of Getting"
-                value={currentItem.ChanceOfGetting}
-                onChange={(e) => setCurrentItem({ ...currentItem, ChanceOfGetting: Number(e.target.value) })}
+                value={currentItem.chanceOfGetting}
+                onChange={(e) => setCurrentItem({ ...currentItem, chanceOfGetting: Number(e.target.value) })}
                 className="w-full p-2 bg-gray-700 rounded"
                 required
               />
 
-              <select
-                multiple
-                value={currentItem.wayToObtain}
-                onChange={handleWayChange}
-                className="w-full p-2 bg-gray-700 rounded"
-              >
+              <div className="flex flex-col gap-2">
 
-                <option value="Mining">Mining</option>
-                <option value="Crafting">Crafting</option>
-                <option value="Loot">Loot</option>
-                <option value="Trading">Trading</option>
+  <label className="text-gray-300">Way To Obtain</label>
 
-              </select>
+  {WAY_OPTIONS.map((option) => (
+
+    <label key={option} className="flex items-center gap-2">
+
+      <input
+        type="checkbox"
+        value={option}
+        checked={currentItem.wayToObtain.includes(option)}
+        onChange={handleWayChange}
+        className="accent-green-500"
+      />
+
+      <span className="capitalize">{option}</span>
+
+    </label>
+
+  ))}
+
+</div>
 
               <div className="flex justify-end gap-2">
 
@@ -324,6 +351,7 @@ const AdminItems = () => {
                 <button
                   type="submit"
                   className="bg-green-600 px-4 py-2 rounded"
+                  
                 >
                   {modalMode === "add" ? "Add" : "Update"}
                 </button>
