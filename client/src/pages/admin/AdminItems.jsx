@@ -61,13 +61,19 @@ const AdminItems = () => {
     setIsModalOpen(true);
   };
 
-  const handleDelete = ($id) => {
-    if (!window.confirm("Delete this item?")) return;
+  const handleDelete = ($id, itemName) => {
+    if (!window.confirm("Delete this item? itemName: " + itemName)) return;
 
-    const updated = items.filter(item => item.$id !== $id);
+    axios.delete(`http://localhost:8000/admin/items/delete/${$id}`, {withCredentials: true}).then(() => {
+      const updated = items.filter(item => item.$id !== $id);
+      setItems(updated);
+      setFilteredItems(updated);
 
-    setItems(updated);
-    setFilteredItems(updated);
+    }).catch((error) => {
+      console.error("Delete error:", error);
+      alert("Error during deleting the item!")
+    })
+
   };
 
   const handleModalSubmit = (e) => {
@@ -212,7 +218,7 @@ const AdminItems = () => {
                   </button>
 
                   <button
-                    onClick={() => handleDelete(item.$id)}
+                    onClick={() => handleDelete(item.$id, item.itemName)}
                     className="bg-red-600 px-3 py-1 rounded"
                   >
                     Delete
