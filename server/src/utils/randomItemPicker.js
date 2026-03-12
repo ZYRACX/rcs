@@ -8,7 +8,7 @@
  * @returns {Array<Object>} array of selected items
  */
 
-function RandomItemPicker(itemList, minimumRange, maximumRange) {
+export default function RandomItemPicker(itemList, minimumRange, maximumRange) {
 
     // -----------------------------
     // Input Validation
