@@ -3,19 +3,20 @@ import { Routes, Route } from "react-router-dom";
 import AdminOverviewPage from "./AdminOverviewPage";
 import AdminItems from "./AdminItems";
 import AdminNavbar from "@/components/AdminNavbar"
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 // import axios from "axios";
 
 export default function AdminPage() {
-
+  const navigate = useNavigate()
   useEffect(() => {
-    const userId = localStorage.getItem("userId");
-    if (!userId) {
-      console.log("No user is logged in");
-      window.location.href = '/auth/login'; // Redirect to login page
-    }
-    
-    
-  },[])
+    axios.get("http://localhost:8000/admin/", { withCredentials: true }).then(() => {
+
+    }).catch((error) =>{
+      console.log("Admin page error:", error);
+      if(error) navigate("/")
+    })
+  },[navigate])
 
   return (
     <div >
