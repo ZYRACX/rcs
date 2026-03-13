@@ -10,7 +10,6 @@ export default function InventoryPage() {
 
   useEffect(() => {
     axios.get("http://localhost:8000/game/inventory", {withCredentials: true}).then((response) => {
-      console.log(response.data)
       setItems(response.data.inventory);
     }).catch((error) => {
       console.log(error)
