@@ -14,7 +14,7 @@ export default function AdminPage() {
       if(res.status === 401) navigate("/")
     }).catch((error) =>{
       console.log("Admin page error:", error);
-      // if(error) navigate("/")
+      if(error) navigate("/")
     })
   },[navigate])
 
