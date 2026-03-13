@@ -1,13 +1,12 @@
 /**
  * RandomItemPicker
- * Picks multiple items based on rarity weights.
+ * Picks multiple item IDs based on rarity weights.
  *
- * @param {Array<{itemId: string, Rarity: number|string}>} itemList
+ * @param {Array<{$id: string, chanceOfGetting: number|string}>} itemList
  * @param {number} minimumRange - cannot be negative
  * @param {number} maximumRange - must be >= 100
- * @returns {Array<Object>} array of selected items
+ * @returns {Array<string>} array of selected itemIds
  */
-
 export default function RandomItemPicker(itemList, minimumRange, maximumRange) {
 
     // -----------------------------
@@ -39,8 +38,8 @@ export default function RandomItemPicker(itemList, minimumRange, maximumRange) {
     // Step 2: Convert rarities to numbers
     // -----------------------------
     const itemsWithWeights = itemList.map(item => ({
-        itemId: item.itemId,
-        rarityWeight: Number(item.Rarity)
+        itemId: item.$id,
+        rarityWeight: Number(item.chanceOfGetting)
     }));
 
     // -----------------------------
@@ -51,27 +50,24 @@ export default function RandomItemPicker(itemList, minimumRange, maximumRange) {
         0
     );
 
-    const selectedItems = [];
+    const selectedItemIds = [];
 
     // -----------------------------
     // Step 4: Run weighted roll N times
     // -----------------------------
     for (let rollIndex = 0; rollIndex < numberOfRolls; rollIndex++) {
-
         const randomWeightValue = Math.random() * totalWeight;
-
         let cumulativeWeight = 0;
 
         for (const currentItem of itemsWithWeights) {
-
             cumulativeWeight += currentItem.rarityWeight;
-
             if (randomWeightValue < cumulativeWeight) {
-                selectedItems.push(currentItem);
+                // console.log(currentItem)
+                selectedItemIds.push(currentItem.itemId);
                 break;
             }
         }
     }
 
-    return selectedItems;
+    return selectedItemIds;
 }
