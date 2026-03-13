@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import axios from "axios"
-import { Link, redirect, useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import {account} from "@/appwrite/index"
 // components
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -11,7 +11,6 @@ import { Button } from "@/components/ui/button"
 export default function SignUp() {
   const navigate = useNavigate();
 
-  // form states
   const [username, setUsername] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -20,7 +19,6 @@ export default function SignUp() {
   // form submit handler
   function handleSubmit(event) {
     event.preventDefault()
-    // console.log(username, email, password, confirmPassword)
 
     if(!username || !email || !password || !confirmPassword) {
       alert("Please fill in all fields!");
@@ -47,31 +45,10 @@ export default function SignUp() {
         alert("Error: " + error.response.data.error_message);
       }
     });
-
-    // Handle form submission logic here
-    // axios.post("http://localhost:8000/api/register", {
-    //   username: username,
-    //   email: email,
-    //   password: password,
-    //   confirmPassword: confirmPassword,
-    // }
-    // ).then((response) => {
-    //   console.log(response);
-    //   if (response.status === 201) {
-    //     alert("Registration successful! Please log in.");
-    //     navigate('/auth/login');
-    //   }
-    // }).catch((error) => {
-    //   console.error("There was an error!", error);
-    //   if (error.response) {
-    //     alert("Error: " + error.response.data.error);
-    //   }
-    // });
   }
 
   useEffect(() => {
     // Redirect if already logged in
-
     account.get().then((res) => {
       if(res.$id) navigate("/game/overview")
     })

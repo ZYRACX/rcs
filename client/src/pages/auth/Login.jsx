@@ -1,11 +1,9 @@
 
 import { useEffect, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
-// import { useNavigate } from "react-router-dom"
 
 import { account } from "@/appwrite"
 
-// components
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -21,29 +19,12 @@ export default function SignIn() {
    account.createEmailPasswordSession({
     email: email,
     password: password,
-   }).then((response) => {
-    // console.log(response);
+   }).then(() => {
     navigate('/game/overview')
    }).catch((error) => {
     console.error("There was an error!", error);
     alert("Error: " + error.message)
    })
-
-    // axios.post("http://localhost:8000/api/login", {
-    //   email: email,
-    //   password: password,
-
-    //   }
-    // ).then((response) => {
-    //   console.log(response);
-    //   localStorage.setItem("userId", response.data.userId)
-    //   navigate('/game/overview')
-    // }).catch((error) => {
-    //   console.error("There was an error!", error);
-    //   if(error.response){
-    //     alert(error.response.data.error);
-    //   }
-    // });
   }
 
 useEffect(() => {
