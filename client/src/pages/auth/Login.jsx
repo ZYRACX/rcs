@@ -47,13 +47,10 @@ export default function SignIn() {
   }
 
 useEffect(() => {
-  account.get().then((response) => {
-    console.log("User is already logged");
-    console.log(response)
+  account.get().then(() => {
     navigate('/game/overview')
-  }).catch((error) => {
+  }).catch(() => {
     console.log("No active session found");
-    // console.error(error)
   })
 }, [navigate]);
 
