@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import axios from "axios"
-import { Link, useNavigate } from "react-router-dom"
+import { Link, redirect, useNavigate } from "react-router-dom"
+import {account} from "@/appwrite/index"
 // components
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -70,12 +71,11 @@ export default function SignUp() {
 
   useEffect(() => {
     // Redirect if already logged in
-    const userId = localStorage.getItem("userId");
-    if (userId) {
-      console.log("User is already logged in with userId:", userId);
 
-      navigate('/game/overview');
-    }
+    account.get().then((res) => {
+      if(res.$id) navigate("/game/overview")
+    })
+    
   }, [navigate]);
 
   return (
