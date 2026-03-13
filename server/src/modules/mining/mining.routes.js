@@ -5,7 +5,7 @@ import * as controller from "./mine.controller.js";
 const router = express.Router();
 
 // 
-router.get("/", controller.getMiniedItems);
+router.get("/", controller.doMining);
 
 
 
