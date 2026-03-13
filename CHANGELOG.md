@@ -1,3 +1,10 @@
+# [0.3.0](https://github.com/ZYRACX/rcs/compare/v0.2.0...v0.3.0) (2026-03-13)
+
+
+### Features
+
+* **game:** implement mining functionality and update activity button handler ([40779a4](https://github.com/ZYRACX/rcs/commit/40779a4bbbd4bf8a46160d221b14364bac4967bf))
+
 # [0.2.0](https://github.com/ZYRACX/rcs/compare/v0.1.0...v0.2.0) (2026-03-13)
 
 
