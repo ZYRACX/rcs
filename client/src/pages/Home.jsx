@@ -5,7 +5,7 @@ export default function HomePage() {
     <div className="homepage">
       {/* Header */}
       <header className="header">
-        <h1 className="logo">Tycoon Empire</h1>
+        <h1 className="logo">RCS</h1>
         <nav className="nav">
           <a href="#features">Features</a>
           <a href="#about">About</a>
@@ -17,7 +17,7 @@ export default function HomePage() {
       <section className="hero">
         <div className="hero-text">
           <h2>
-            Build Your <span className="highlight">Empire</span>
+            Build Your <span className="highlight">Country</span>
           </h2>
           <p>
             Start small, dream big. In Tycoon Empire, every decision counts.
