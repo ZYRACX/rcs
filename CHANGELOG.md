@@ -1,3 +1,10 @@
+## [0.3.1](https://github.com/ZYRACX/rcs/compare/v0.3.0...v0.3.1) (2026-03-13)
+
+
+### Bug Fixes
+
+* **admin:** redirect to home on route error ([e5063f9](https://github.com/ZYRACX/rcs/commit/e5063f9f95e68d5066a317a6dfe62b2e406708be))
+
 # [0.3.0](https://github.com/ZYRACX/rcs/compare/v0.2.0...v0.3.0) (2026-03-13)
 
 
