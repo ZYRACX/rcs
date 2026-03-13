@@ -1,56 +1,123 @@
 import { ID, Query } from "node-appwrite";
 import appwriteConfig from "../../config/appwrite.js";
 
+const COOLDOWN_MS = 5000; // 5 seconds
+
+
+/**
+ * Check mining cooldown
+ */
+export async function checkMiningCooldown(tablesDB, userId) {
+
+    const result = await tablesDB.listRows({
+        databaseId: appwriteConfig.appwrite.databaseId,
+        tableId: appwriteConfig.appwrite.USER_TABLE,
+        queries: [
+            Query.equal("userId", userId)
+        ]
+    });
+
+    if (result.rows.length === 0) {
+        return { allowed: true, remaining: 0 };
+    }
+
+    const lastMine = result.rows[0].lastMineAt;
+
+    if (!lastMine) {
+        return { allowed: true, remaining: 0 };
+    }
+
+    const lastMineTime = new Date(lastMine).getTime();
+    const now = Date.now();
+
+    if (now - lastMineTime < COOLDOWN_MS) {
+
+        const remaining = COOLDOWN_MS - (now - lastMineTime);
+
+        return {
+            allowed: false,
+            remaining
+        };
+    }
+
+    return {
+        allowed: true,
+        remaining: 0
+    };
+}
+
+
+/**
+ * Update mining timestamp
+ */
+export async function updateMiningTimestamp(tablesDB, userId) {
+
+    const result = await tablesDB.listRows({
+        databaseId: appwriteConfig.appwrite.databaseId,
+        tableId: appwriteConfig.appwrite.USER_TABLE,
+        queries: [
+            Query.equal("userId", userId)
+        ]
+    });
+
+    if (result.rows.length === 0) return;
+
+    const row = result.rows[0];
+
+    await tablesDB.updateRow({
+        databaseId: appwriteConfig.appwrite.databaseId,
+        tableId: appwriteConfig.appwrite.USER_TABLE,
+        rowId: row.$id,
+        data: {
+            lastMineAt: new Date().toISOString()
+        }
+    });
+}
+
+
 /**
  * Get mineable items
  */
 export async function getMinableItems(tablesDB) {
 
-    try {
+    const result = await tablesDB.listRows({
+        databaseId: appwriteConfig.appwrite.databaseId,
+        tableId: appwriteConfig.appwrite.ITEM_TABLE,
+        queries: [
+            Query.contains("wayToObtain", "mineable")
+        ]
+    });
 
-        const result = await tablesDB.listRows({
-            databaseId: appwriteConfig.appwrite.databaseId,
-            tableId: appwriteConfig.appwrite.ITEM_TABLE,
-            queries: [
-                Query.contains("wayToObtain", "mineable")
-            ]
-        });
-
-        return result.rows;
-
-    } catch (error) {
-        console.error("Error fetching mineable items:", error);
-        throw error;
-    }
+    return result.rows;
 }
 
 
 /**
- * Group mined items by ID
- * 
- * @param {Array<string>} items
+ * Group mined items
  */
 export async function getSortedItems(items) {
 
     const counts = {};
+
     for (const item of items) {
+
         const id = item;
+
         if (!id) continue;
+
         if (!counts[id]) {
             counts[id] = 0;
         }
+
         counts[id]++;
     }
+
     return counts;
 }
 
 
 /**
- * Upsert mined items into inventory
- * 
- * @param {TablesDB} tablesDB
- * @param {Object} sortedItems
- * @param {string} userId
+ * Add mined items to inventory
  */
 export async function addToInventory(tablesDB, sortedItems, userId) {
 
@@ -60,7 +127,6 @@ export async function addToInventory(tablesDB, sortedItems, userId) {
 
         for (const [itemId, quantity] of Object.entries(sortedItems)) {
 
-            // 1️⃣ Check if item already exists in inventory
             const existing = await tablesDB.listRows({
                 databaseId: appwriteConfig.appwrite.databaseId,
                 tableId: appwriteConfig.appwrite.INVENTORY_TABLE,
@@ -74,7 +140,6 @@ export async function addToInventory(tablesDB, sortedItems, userId) {
 
                 const row = existing.rows[0];
 
-                // 2️⃣ Update existing row
                 const updated = await tablesDB.updateRow({
                     databaseId: appwriteConfig.appwrite.databaseId,
                     tableId: appwriteConfig.appwrite.INVENTORY_TABLE,
@@ -88,14 +153,13 @@ export async function addToInventory(tablesDB, sortedItems, userId) {
 
             } else {
 
-                // 3️⃣ Create new row
                 const created = await tablesDB.createRow({
                     databaseId: appwriteConfig.appwrite.databaseId,
                     tableId: appwriteConfig.appwrite.INVENTORY_TABLE,
                     rowId: ID.unique(),
                     data: {
-                        userId: userId,
-                        itemId: itemId,
+                        userId,
+                        itemId,
                         amount: quantity
                     }
                 });

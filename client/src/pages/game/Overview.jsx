@@ -18,7 +18,10 @@ export default function TycoonDashboard() {
   
    function handleMining () {
     axios.get("http://localhost:8000/game/mining", {withCredentials: true}).then((res) => {
-      console.log(res.data)
+      // console.log(res.data)
+    }).catch(error => {
+      console.log(error.response.data)
+      alert(`${error.response.data.error}, Try after ${error.response.data.retry_after_ms}ms`)
     })
   }
   const handleActivity = () => {};

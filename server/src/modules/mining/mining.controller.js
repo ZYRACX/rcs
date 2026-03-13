@@ -2,16 +2,8 @@ import { request, response } from "express";
 import { createAppwriteClient } from "../../utils/appwrite.js";
 import RandomItemPicker from "../../utils/randomItemPicker.js";
 import { extractSessionCookie } from "../../utils/SessionCookieExtractor.js";
-
 import * as miningService from "./mining.service.js";
 
-/**
- * Mining endpoint
- * Generates mined items and stores them in inventory
- * 
- * @param {request} req
- * @param {response} res
- */
 export async function doMining(req, res) {
 
     try {
@@ -23,15 +15,31 @@ export async function doMining(req, res) {
 
         const user = await account.get();
 
+        // Check cooldown
+        const cooldownCheck = await miningService.checkMiningCooldown(
+            tablesDB,
+            user.$id
+        );
+
+        if (!cooldownCheck.allowed) {
+            return res.status(429).json({
+                error: "Mining cooldown active",
+                retry_after_ms: cooldownCheck.remaining
+            });
+        }
+
+        // 🚨 update timestamp immediately to prevent spam
+        await miningService.updateMiningTimestamp(tablesDB, user.$id);
+
         // Fetch mineable items
         const minableItems = await miningService.getMinableItems(tablesDB);
 
-        // Random drop (100–500 items)
+        // Random drop
         const minedItems = RandomItemPicker(minableItems, 100, 500);
-        // Count occurrences
+
+        // Group items
         const sortedItems = await miningService.getSortedItems(minedItems);
 
-        console.log("Sorted items: " + sortedItems)
         // Add to inventory
         const inventoryResult = await miningService.addToInventory(
             tablesDB,
@@ -46,6 +54,7 @@ export async function doMining(req, res) {
         });
 
     } catch (error) {
+
         console.error("Mining error:", error);
 
         return res.status(500).json({
