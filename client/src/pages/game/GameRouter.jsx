@@ -3,7 +3,6 @@ import { Routes, Route, useNavigate } from "react-router-dom";
 import GameNavbar from "@/components/GameNavbar";
 import Overview from "./Overview";
 import InventoryPage from "./inventory";
-import axios from "axios";
 import { account } from "@/appwrite";
 
 export default function GameHome() {
@@ -11,7 +10,6 @@ export default function GameHome() {
 const [balance, setBalance] = useState(0);
   useEffect(() => {
     account.get().then((user) => {
-      // console.log(user)
       if(!user) navigate('/auth/login');
     }).catch((error) => {
       console.log(error)

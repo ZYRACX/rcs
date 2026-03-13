@@ -21,14 +21,7 @@ export default function TycoonDashboard() {
       console.log(res.data)
     })
   }
-  const handleActivity = () => {
-    // setCoins((c) => c + 5);
-    // setXp((x) => x + 10);
-    // if (xp + 10 >= level * 100) {
-    //   setLevel((l) => l + 1);
-    //   setXp(0);
-    // }
-  };
+  const handleActivity = () => {};
 
   const sendMessage = () => {
     if (!input.trim()) return;
