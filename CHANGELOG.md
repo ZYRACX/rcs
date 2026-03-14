@@ -1,3 +1,10 @@
+# [0.6.0](https://github.com/ZYRACX/rcs/compare/v0.5.0...v0.6.0) (2026-03-14)
+
+
+### Features
+
+* **admin:** add endpoints to add and remove items from player inventory ([2e0b4b5](https://github.com/ZYRACX/rcs/commit/2e0b4b505a35ccc5667be1b7b384c3a51ccedad5))
+
 # [0.5.0](https://github.com/ZYRACX/rcs/compare/v0.4.0...v0.5.0) (2026-03-14)
 
 
