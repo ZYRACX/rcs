@@ -3,7 +3,7 @@ import { extractSessionCookie } from "../../utils/SessionCookieExtractor.js";
 import { createAppwriteClient } from "../../utils/appwrite.js";
 import itemManagerRouter from "./itemsManager/itemManager.route.js";
 import userManagerRouter from "./userManager/userManager.route.js";
-
+import playerManageRouter from "./playerManage/playerManage.route.js"
 const router = Express.Router();
 
 router.use(async (req, res, next) => {
@@ -45,6 +45,7 @@ router.use(async (req, res, next) => {
 
 router.use("/items", itemManagerRouter);
 router.use("/users", userManagerRouter);
+router.use("/player", playerManageRouter)
 
 router.get("/", (req, res) => {
     res.send("admin route");
