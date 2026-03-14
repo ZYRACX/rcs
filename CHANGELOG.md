@@ -1,3 +1,10 @@
+# [0.4.0](https://github.com/ZYRACX/rcs/compare/v0.3.1...v0.4.0) (2026-03-13)
+
+
+### Features
+
+* **mining:** implement cooldown mechanism and rate limit handling ([ed553bc](https://github.com/ZYRACX/rcs/commit/ed553bc8c794834688a760b18b7dec5407f019a3))
+
 ## [0.3.1](https://github.com/ZYRACX/rcs/compare/v0.3.0...v0.3.1) (2026-03-13)
 
 
