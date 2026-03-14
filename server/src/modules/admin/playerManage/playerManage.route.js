@@ -9,5 +9,6 @@ const router = Router();
 
 router.get("/:userId", controller.getUserDataByUserId)
 router.get("/:userId/inventory", controller.getPlayerInventoryAdmin)
-
+router.post("/:userId/inventory/add", controller.addPlayerItemToInventory)
+router.post("/:userId/inventory/remove", controller.removePlayerItemToInventory)
 export default router;

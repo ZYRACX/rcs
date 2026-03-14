@@ -2,6 +2,7 @@ import appwrite from "../../../config/appwrite.js";
 import { createAppwriteClient, Query } from "../../../utils/appwrite.js";
 import { request, response } from "express";
 import * as service from "./playerManage.service.js"
+import {addOneItemToInventory, removeOneItemToInventory} from "../../../shared/services/inventory.service.js"
 /**
  * 
  * @param {request} req 
@@ -114,5 +115,52 @@ export async function getPlayerInventoryAdmin(req, res) {
       error: "Failed to fetch player inventory",
     });
 
+  }
+}
+/**
+ * 
+ * @param {request} req 
+ * @param {response} res 
+ */
+export async function addPlayerItemToInventory(req, res) {
+  try{
+    const {userId} = req.params
+    const {itemId, amount} = req.body
+
+    const {tablesDB} = createAppwriteClient("admin")
+    const updatedItem = await addOneItemToInventory(tablesDB, userId, itemId, amount)
+
+    if(updatedItem.created) return res.status(201).json({
+      message: "Item successfully added to the player inventory.",
+      item_alt_id: updatedItem.created.itemAltId,
+      item_$id: updatedItem.created.$id
+    })
+    else return res.status(200).json({
+      message: "Item successfuly updated to the player inventory.",
+      item_alt_id: updatedItem.updated.itemAltId,
+      item_$id: updatedItem.updated.$id
+    })
+    
+  } catch(error){
+    console.log("Error from addPlayerItemToInventory(): " + error)
+  }
+}
+
+export async function removePlayerItemToInventory(req, res) {
+  try{
+    const {userId} = req.params
+    const {itemId, amount} = req.body
+
+    const {tablesDB} = createAppwriteClient("admin")
+    const updatedItem = await removeOneItemToInventory(tablesDB, userId, itemId, amount)
+
+    return res.status(200).json({
+      message: "Item successfuly updated to the player inventory.",
+      item_alt_id: updatedItem.updated.itemAltId,
+      item_$id: updatedItem.updated.$id
+    })
+    
+  } catch(error){
+    console.log("Error from removePlayerItemToInventory(): " + error)
   }
 }
