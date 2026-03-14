@@ -1,3 +1,13 @@
+# [0.5.0](https://github.com/ZYRACX/rcs/compare/v0.4.0...v0.5.0) (2026-03-14)
+
+
+### Features
+
+* **admin:** Add client-side player inventory inspector page ([b617e57](https://github.com/ZYRACX/rcs/commit/b617e576ebde280070fcc3a6415c3b9e7283e7af))
+* **admin:** Add client-side player profile inspector page ([893485b](https://github.com/ZYRACX/rcs/commit/893485b6dc026d9d94cad019878339132cb0bbaa))
+* **admin:** Integrate player management pages into admin routing ([b4e9a04](https://github.com/ZYRACX/rcs/commit/b4e9a0464c4e1137394251ab47576201b1197e30))
+* **admin:** Introduce player management backend API ([3e427fa](https://github.com/ZYRACX/rcs/commit/3e427fa17304c44d093f9ccc2e48253cf3925477))
+
 # [0.4.0](https://github.com/ZYRACX/rcs/compare/v0.3.1...v0.4.0) (2026-03-13)
 
 
