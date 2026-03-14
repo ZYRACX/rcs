@@ -3,9 +3,11 @@ import { Routes, Route } from "react-router-dom";
 import AdminOverviewPage from "./AdminOverviewPage";
 import AdminItems from "./AdminItems";
 import AdminNavbar from "@/components/AdminNavbar"
+import AdminPlayers from "./AdminPlayers"
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-// import axios from "axios";
+import AdminInventoryInpector from "./AdminInventoryInpector"
+
 
 export default function AdminPage() {
   const navigate = useNavigate()
@@ -25,6 +27,8 @@ export default function AdminPage() {
         {/* Relative paths (no /admin prefix) */}
         <Route path="users" element={<AdminOverviewPage />} />
         <Route path="items" element={<AdminItems />} />"
+        <Route path="players" element={<AdminPlayers />} />
+        <Route path="player/:userId/inventory" element={<AdminInventoryInpector />} />
       </Routes>
     </div>
   );
