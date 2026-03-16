@@ -1,3 +1,4 @@
+import { backend_url } from "@/lib/backend_url";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 
@@ -26,7 +27,7 @@ const WAY_OPTIONS = [
   });
 
   useEffect(() => {
-    axios.get("http://localhost:8000/admin/items", { withCredentials: true }).then((res) => {
+    axios.get(`${backend_url}/admin/items`, { withCredentials: true }).then((res) => {
       setItems(res.data.items);
       setFilteredItems(res.data.items);
     }).catch((error) => {
@@ -69,7 +70,7 @@ const WAY_OPTIONS = [
   const handleDelete = ($id, itemName) => {
     if (!window.confirm("Delete this item? itemName: " + itemName)) return;
 
-    axios.delete(`http://localhost:8000/admin/items/delete/${$id}`, {withCredentials: true}).then(() => {
+    axios.delete(`${backend_url}/admin/items/delete/${$id}`, {withCredentials: true}).then(() => {
       const updated = items.filter(item => item.$id !== $id);
       setItems(updated);
       setFilteredItems(updated);
@@ -86,7 +87,7 @@ const WAY_OPTIONS = [
 
     if (modalMode === "add") {
 
-      axios.post("http://localhost:8000/admin/items/item/add",
+      axios.post(`${backend_url}/admin/items/item/add`,
     {
       itemName: currentItem.itemName,
       itemAltId: currentItem.itemAltId,
@@ -110,7 +111,7 @@ const WAY_OPTIONS = [
 
     } else {
 
-      axios.put(`http://localhost:8000/admin/items/${currentItem.$id}`, {
+      axios.put(`${backend_url}/admin/items/${currentItem.$id}`, {
         itemName: currentItem.itemName,
         itemAltId: currentItem.itemAltId,
         itemBaseValue: currentItem.itemBaseValue,

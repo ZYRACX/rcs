@@ -1,6 +1,6 @@
 export default {
     appwrite: {
-        databaseId: "699994420009b8bf7b6a",
+        databaseId: process.env.APPWRITE_DATABASE_ID,
         USER_TABLE: "user",
         DEVICE_TABLE: "devices",
         INVENTORY_TABLE: "inventory",

@@ -2,11 +2,13 @@ import { useEffect, useState } from "react"
 import axios from "axios"
 import { Link, useNavigate } from "react-router-dom"
 import {account} from "@/appwrite/index"
+
 // components
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
+import { backend_url } from "@/lib/backend_url"
 
 export default function SignUp() {
   const navigate = useNavigate();
@@ -30,7 +32,7 @@ export default function SignUp() {
       return;
     }
 
-    axios.post("http://localhost:8000/auth/register", {
+    axios.post(`${backend_url}/auth/register`, {
       username: username,
       email: email,
       password: password,

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { backend_url } from "@/lib/backend_url";
 
 export default function AdminPlayers() {
 
@@ -13,7 +14,7 @@ export default function AdminPlayers() {
     try {
       setError("");
       const res = await axios.get(
-        `http://localhost:8000/admin/player/${userId}`,
+        `${backend_url}/admin/player/${userId}`,
         { withCredentials: true }
       );
       console.log(res.data);

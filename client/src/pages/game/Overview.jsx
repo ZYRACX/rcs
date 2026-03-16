@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import axios from "axios";
+import { backend_url } from "@/lib/backend_url";
 
 export default function TycoonDashboard() {
   const [coins, setCoins] = useState(0);
@@ -17,7 +18,7 @@ export default function TycoonDashboard() {
   const [input, setInput] = useState("");
   
    function handleMining () {
-    axios.get("http://localhost:8000/game/mining", {withCredentials: true}).then((res) => {
+    axios.get(`${backend_url}/game/mining`, {withCredentials: true}).then((res) => {
       // console.log(res.data)
     }).catch(error => {
       console.log(error.response.data)
@@ -34,7 +35,7 @@ export default function TycoonDashboard() {
 
   useEffect(() => {
     // Fetch balance from backend
-    axios.get("http://localhost:8000/game/playerinfo",{
+    axios.get(`${backend_url}/game/playerinfo`,{
       withCredentials: true
     }).then((response) => {
       setCoins(response.data.balance)
