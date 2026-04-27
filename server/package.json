@@ -2,7 +2,7 @@
   "name": "server",
   "version": "0.1.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
     "dev": "nodemon src/index.js"
   },
@@ -11,7 +11,6 @@
   "license": "ISC",
   "type": "module",
   "dependencies": {
-    "appwrite": "^22.4.1",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^17.3.1",

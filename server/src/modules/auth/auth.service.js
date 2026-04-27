@@ -1,6 +1,6 @@
 import { createAppwriteClient, ID } from "../../utils/appwrite.js"
 // import appwriteConfig from "../../config/appwrite.js"
-export async function register(username, email, password, trackerId) {
+export async function register(username, email, password) {
 
   try {
     const { account } = createAppwriteClient("admin")
