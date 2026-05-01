@@ -70,6 +70,11 @@ const WAY_OPTIONS = [
   const handleDelete = ($id, itemName) => {
     if (!window.confirm("Delete this item? itemName: " + itemName)) return;
 
+    if($id === null || $id === undefined || !$id) {
+      alert("Invalid item ID");
+      return;
+    }
+
     axios.delete(`${backend_url}/admin/items/delete/${$id}`, {withCredentials: true}).then(() => {
       const updated = items.filter(item => item.$id !== $id);
       setItems(updated);
