@@ -1,4 +1,5 @@
 "use client";
+import { backend_url } from "@/lib/backend_url";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
@@ -9,7 +10,7 @@ export default function InventoryPage() {
   // Fetch inventory
 
   useEffect(() => {
-    axios.get("http://localhost:8000/game/inventory", {withCredentials: true}).then((response) => {
+    axios.get(`${backend_url}/game/inventory`, {withCredentials: true}).then((response) => {
       setItems(response.data.inventory);
     }).catch((error) => {
       console.log(error)

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { backend_url } from "@/lib/backend_url";
 
 const AdminPage = () => {
   const [search, setSearch] = useState("");
@@ -9,7 +10,7 @@ const AdminPage = () => {
   const fetchUsers = async (query = "") => {
     try {
       setLoading(true);
-      const res = await axios.get(`http://localhost:8000/api/admin/users?q=${query}`);
+      const res = await axios.get(`${backend_url}/api/admin/users?q=${query}`);
       setUsers(res.data);
     } catch (err) {
       console.error("Error fetching users:", err.response?.data || err.message);
@@ -29,7 +30,7 @@ const AdminPage = () => {
     if (!newName || !newEmail) return;
 
     try {
-      await axios.put(`http://localhost:8000/api/admin/users/${user.userId}`, {
+      await axios.put(`${backend_url}/api/admin/users/${user.userId}`, {
         name: newName,
         email: newEmail,
       });
@@ -44,7 +45,7 @@ const AdminPage = () => {
     if (!window.confirm("Are you sure you want to delete this user?")) return;
 
     try {
-      await axios.delete(`http://localhost:8000/api/admin/users/${userId}`);
+      await axios.delete(`${backend_url}/api/admin/users/${userId}`);
       alert("User deleted!");
       fetchUsers(search);
     } catch (err) {

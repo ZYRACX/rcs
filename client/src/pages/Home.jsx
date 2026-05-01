@@ -20,8 +20,7 @@ export default function HomePage() {
             Build Your <span className="highlight">Country</span>
           </h2>
           <p>
-            Start small, dream big. In Tycoon Empire, every decision counts.
-            Will you rise to become the ultimate magnate?
+            Manage economy, diplomacy, and military to build a powerful nation.
           </p>
           <Link to="/auth/register" className="cta">Start Playing</Link>
         </div>

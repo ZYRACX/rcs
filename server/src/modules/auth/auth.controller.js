@@ -3,42 +3,6 @@
 import * as authService from "./auth.service.js";
 import appwriteConfig from "../../config/appwrite.js"
 import { ID, createAppwriteClient } from "../../utils/appwrite.js";
-// export async function discordAuth(req, res) {
-  // const { userId, username } = req.query;
-
-  // if (!userId) {
-  //   return res.status(400).json({
-  //     error: "User ID is required"
-  //   });
-  // }
-
-  // try {
-
-  //   const user = await authService.discordAuth(userId, username);
-
-  //   return res.status(200).json({
-  //     message: "User authenticated successfully",
-  //     userId: user.userId
-  //   });
-
-  // } catch (error) {
-
-  //   console.error("Discord auth error:", error);
-  //   if(error.code === 400) {
-  //     return res.status(422).json({
-  //       error_message: "Password must be between 8 and 265 characters long, and should not be one of the commonly used password."
-  //     })
-  //   }
-
-  //   if(error.code === 400 )
-
-  //   return res.status(500).json({
-  //     error_message: "Something went wrong during authentication"
-  //   });
-
-  // }
-
-// }
 
 
 

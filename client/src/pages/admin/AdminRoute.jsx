@@ -7,12 +7,13 @@ import AdminPlayers from "./AdminPlayers"
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import AdminInventoryInpector from "./AdminInventoryInpector"
+import { backend_url } from "@/lib/backend_url";
 
 
 export default function AdminPage() {
   const navigate = useNavigate()
   useEffect(() => {
-    axios.get("http://localhost:8000/admin/", { withCredentials: true }).then((res) => {
+    axios.get(`${backend_url}/admin/`, { withCredentials: true }).then((res) => {
       if(res.status === 401) navigate("/")
     }).catch((error) =>{
       console.log("Admin page error:", error);

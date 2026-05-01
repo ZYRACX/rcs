@@ -1,4 +1,5 @@
 "use client";
+import { backend_url } from "@/lib/backend_url";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -13,7 +14,7 @@ export default function AdminInventory() {
   // Fetch player's inventory
   useEffect(() => {
     axios
-      .get(`http://localhost:8000/admin/player/${userId}/inventory`, {
+      .get(`${backend_url}/admin/player/${userId}/inventory`, {
         withCredentials: true,
       })
       .then((response) => {
