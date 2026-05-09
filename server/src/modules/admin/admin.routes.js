@@ -1,9 +1,9 @@
 import Express from "express";
 import { extractSessionCookie } from "../../utils/SessionCookieExtractor.js";
 import { createAppwriteClient } from "../../utils/appwrite.js";
-import itemManagerRouter from "./itemsManager/itemManager.route.js";
-import userManagerRouter from "./userManager/userManager.route.js";
-import playerManageRouter from "./playerManage/playerManage.route.js"
+import itemManagerRouter from "./itemsManager/itemManager.routes.js";
+import userManagerRouter from "./userManager/userManager.routes.js";
+import playerManageRouter from "./playerManage/playerManage.routes.js"
 const router = Express.Router();
 
 router.use(async (req, res, next) => {

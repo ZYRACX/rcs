@@ -20,7 +20,7 @@ import * as inventoryService from "./inventory.service.js";
  * {
  *   inventory: [
  *     {
- *       itemId: "stone",
+ *       itemId: "1",
  *       name: "Stone",
  *       quantity: 10,
  *       itemBaseValue: 2

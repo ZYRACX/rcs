@@ -8,7 +8,7 @@ import economyRouter from './modules/economy/economy.routes.js';
 import playerInfoRouter from './modules/player/player.routes.js';
 import inventoryRouter from './modules/inventory/inventory.route.js';
 import miningRouter from './modules/mining/mining.routes.js';
-import adminRouter from './modules/admin/admin.route.js';
+import adminRouter from './modules/admin/admin.routes.js';
 // express app instance
 const app = express();
 
