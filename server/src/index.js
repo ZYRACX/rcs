@@ -6,8 +6,9 @@ dotenv.config()
 import authRouter from './modules/auth/auth.routes.js';
 import economyRouter from './modules/economy/economy.routes.js';
 import playerInfoRouter from './modules/player/player.routes.js';
-import inventoryRouter from './modules/inventory/inventory.route.js';
+import inventoryRouter from './modules/inventory/inventory.routes.js';
 import miningRouter from './modules/mining/mining.routes.js';
+import exploringRouter from './modules/exploring/exploring.routes.js';
 import adminRouter from './modules/admin/admin.routes.js';
 // express app instance
 const app = express();
@@ -39,7 +40,7 @@ app.use('/game/economy', economyRouter);
 app.use('/game/playerinfo', playerInfoRouter);
 app.use("/game/inventory", inventoryRouter)
 app.use("/game/mining", miningRouter)
-
+app.use("/game/exploring", exploringRouter)
 app.use("/admin", adminRouter)
 
 app.listen(PORT, () => {
