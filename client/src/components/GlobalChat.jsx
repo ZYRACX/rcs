@@ -1,25 +1,90 @@
+import { useState } from "react";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 export default function GlobalChat() {
-    return (
-        <div className="dark flex flex-col h-[400px] border rounded-md">
-            <div className="dark flex-1 overflow-y-auto p-2 space-y-2 ">
+  const [messages, setMessages] = useState([]);
+  const [input, setInput] = useState("");
 
-                <p className="dark text-center text-gray-400">No messages yet</p>
-                <div className="text-sm">
-                    <span className="dark font-semibold text-purple-600">Username:</span>{' '}
-                    <span>text here</span>
-                </div>
+  const sendMessage = () => {
+    if (!input.trim()) return;
 
-            </div>
-            <div className="p-2 border-t flex gap-2">
-                <Input type="text"
-                    placeholder="Type a message"
-                />
-                <Button>Send</Button>
-            </div>
-            
-        </div>
-    );
+    setMessages((m) => [
+      ...m,
+      {
+        user: "Player",
+        text: input,
+      },
+    ]);
+
+    setInput("");
+  };
+
+  return (
+    <div
+      className="
+        bg-neutral-800
+        border
+        border-neutral-700
+        rounded-lg
+        p-6
+      "
+    >
+      <h2 className="text-lg font-semibold mb-4">
+        Global Chat
+      </h2>
+
+      <div
+        className="
+          h-56
+          overflow-y-auto
+          border
+          border-neutral-700
+          rounded
+          p-2
+          mb-3
+        "
+      >
+        {messages.length === 0 && (
+          <p className="text-neutral-500">
+            No messages yet
+          </p>
+        )}
+
+        {messages.map((m, i) => (
+          <p key={i}>
+            <span className="text-blue-400">
+              {m.user}:
+            </span>{" "}
+            {m.text}
+          </p>
+        ))}
+      </div>
+
+      <div className="flex gap-2">
+        <Input
+          className="
+            bg-neutral-900
+            border-neutral-700
+          "
+          placeholder="Type a message"
+          value={input}
+          onChange={(e) =>
+            setInput(e.target.value)
+          }
+        />
+
+        <Button
+          onClick={sendMessage}
+          className="
+            bg-green-600
+            hover:bg-green-500
+          "
+        >
+          Send
+        </Button>
+      </div>
+    </div>
+  );
 }
