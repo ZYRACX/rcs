@@ -7,8 +7,6 @@ const router = express.Router();
 // 
 router.get("/balance", controller.getBalance )
 
-router.get("/discord/register", (req, res) => {});
-
 
 // 
 // router.get("/discord/register", controller.discordAuth);
