@@ -4,11 +4,11 @@ import cookieParser from "cookie-parser"
 import dotenv from 'dotenv';
 dotenv.config()
 import authRouter from './modules/auth/auth.routes.js';
-import economyRouter from './modules/economy/economy.routes.js';
-import playerInfoRouter from './modules/player/player.routes.js';
-import inventoryRouter from './modules/inventory/inventory.routes.js';
-import miningRouter from './modules/mining/mining.routes.js';
-import exploringRouter from './modules/exploring/exploring.routes.js';
+import economyRouter from './modules/game/economy/economy.routes.js';
+import playerInfoRouter from './modules/game/player/player.routes.js';
+import inventoryRouter from './modules/game/inventory/inventory.routes.js';
+import miningRouter from './modules/game/mining/mining.routes.js';
+import exploringRouter from './modules/game/exploring/exploring.routes.js';
 import adminRouter from './modules/admin/admin.routes.js';
 // express app instance
 const app = express();

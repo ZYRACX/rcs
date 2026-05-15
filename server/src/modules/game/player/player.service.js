@@ -1,6 +1,6 @@
 import { TablesDB } from "node-appwrite";
-import appwriteConfig from "../../config/appwrite.js"
-import { Query } from "../../utils/appwrite.js"
+import appwriteConfig from "../../../config/appwrite.js"
+import { Query } from "../../../utils/appwrite.js"
 
 /**
  * 

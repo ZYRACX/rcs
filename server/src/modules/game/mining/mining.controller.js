@@ -1,7 +1,7 @@
 import { request, response } from "express";
-import { createAppwriteClient } from "../../utils/appwrite.js";
-import RandomItemPicker from "../../utils/randomItemPicker.js";
-import { extractSessionCookie } from "../../utils/SessionCookieExtractor.js";
+import { createAppwriteClient } from "../../../utils/appwrite.js";
+import RandomItemPicker from "../../../utils/randomItemPicker.js";
+import { extractSessionCookie } from "../../../utils/SessionCookieExtractor.js";
 import * as miningService from "./mining.service.js";
 
 export async function doMining(req, res) {

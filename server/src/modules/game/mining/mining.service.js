@@ -1,5 +1,5 @@
 import { ID, Query } from "node-appwrite";
-import appwriteConfig from "../../config/appwrite.js";
+import appwriteConfig from "../../../config/appwrite.js";
 
 const COOLDOWN_MS = 5000; // 5 seconds
 

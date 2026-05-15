@@ -1,6 +1,6 @@
 import {request, response} from "express"
-import { createAppwriteClient, Query } from "../../utils/appwrite.js"
-import appwriteConfig from "../../config/appwrite.js"
+import { createAppwriteClient, Query } from "../../../utils/appwrite.js"
+import appwriteConfig from "../../../config/appwrite.js"
 /**
  * 
  * @param {request} req 

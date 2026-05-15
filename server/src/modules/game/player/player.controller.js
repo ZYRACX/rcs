@@ -1,7 +1,7 @@
 import {request, response} from "express"
-import { createAppwriteClient } from "../../utils/appwrite.js"
+import { createAppwriteClient } from "../../../utils/appwrite.js"
 
-import {extractSessionCookie} from "../../utils/SessionCookieExtractor.js"
+import {extractSessionCookie} from "../../../utils/SessionCookieExtractor.js"
 import * as playerService from "./player.service.js"
 /**
  * 

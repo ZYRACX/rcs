@@ -1,4 +1,4 @@
-import appwriteConfig from "../../config/appwrite.js";
+import appwriteConfig from "../../../config/appwrite.js";
 import { Query } from "node-appwrite";
 
 export async function getPlayerInventory(userId, tablesDB) {

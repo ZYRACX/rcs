@@ -1,11 +1,11 @@
 import { createAppwriteClient }
-    from "../../utils/appwrite.js";
+    from "../../../utils/appwrite.js";
 
 import RandomItemPicker
-    from "../../utils/randomItemPicker.js";
+    from "../../../utils/randomItemPicker.js";
 
 import { extractSessionCookie }
-    from "../../utils/SessionCookieExtractor.js";
+    from "../../../utils/SessionCookieExtractor.js";
 
 import * as exploringService
     from "./exploring.service.js";

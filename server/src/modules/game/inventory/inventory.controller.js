@@ -1,7 +1,6 @@
-import { createAppwriteClient, Query } from "../../utils/appwrite.js";
-import appwriteConfig from "../../config/appwrite.js";
-import { request, response } from "express";
-import { extractSessionCookie } from "../../utils/SessionCookieExtractor.js";
+import { createAppwriteClient, Query } from "../../../utils/appwrite.js";
+import appwriteConfig from "../../../config/appwrite.js";
+import { extractSessionCookie } from "../../../utils/SessionCookieExtractor.js";
 import * as inventoryService from "./inventory.service.js";
 /**
  * Get the authenticated player's inventory.
