@@ -4,6 +4,7 @@ import GameNavbar from "@/components/GameNavbar";
 import Overview from "./Overview";
 import InventoryPage from "./inventory";
 import { account } from "@/appwrite";
+import MarketPage from "./MarketPlace";
 
 export default function GameHome() {
   const navigate = useNavigate();
@@ -26,7 +27,7 @@ const [balance, setBalance] = useState(0);
         <Route path="overview" element={<Overview />} />
         <Route path="inventory" element={<InventoryPage />} />
         <Route path="quests" element={<div>Quests Page</div>} />
-        <Route path="marketplace" element={<div>Market Place Page</div>} />
+        <Route path="marketplace" element={<MarketPage />} />
       </Routes>
     </div>
   );
