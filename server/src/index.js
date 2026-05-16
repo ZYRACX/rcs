@@ -10,6 +10,7 @@ import inventoryRouter from './modules/game/inventory/inventory.routes.js';
 import miningRouter from './modules/game/mining/mining.routes.js';
 import exploringRouter from './modules/game/exploring/exploring.routes.js';
 import adminRouter from './modules/admin/admin.routes.js';
+import marketRouter from './modules/game/market/market.routes.js';
 // express app instance
 const app = express();
 
@@ -42,7 +43,7 @@ app.use("/game/inventory", inventoryRouter)
 app.use("/game/mining", miningRouter)
 app.use("/game/exploring", exploringRouter)
 app.use("/admin", adminRouter)
-
+app.use("/game/market", marketRouter)
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });

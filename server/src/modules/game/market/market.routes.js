@@ -1,14 +1,32 @@
 import express from "express";
 
-import * as controller
+import * as marketController
 from "./market.controller.js";
 
 const router = express.Router();
 
-router.get("/listings",controller.getListings);
+/**
+ * Get all active listings
+ */
+router.get(
+    "/listings",
+    marketController.getListings
+);
 
-router.post("/list",controller.createListing);
+/**
+ * Create market listing
+ */
+router.post(
+    "/list",
+    marketController.createListing
+);
 
-router.post("/buy/:listingId",controller.buyListing);
+/**
+ * Buy listing
+ */
+router.post(
+    "/buy/:listingId",
+    marketController.buyListing
+);
 
 export default router;
