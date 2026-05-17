@@ -106,7 +106,8 @@ export async function getPlayerInventory(req, res) {
                     itemId: playerInventoryItem.itemId,
                     name: item.itemName,
                     quantity: playerInventoryItem.amount,
-                    itemBaseValue: item.itemBaseValue
+                    itemBaseValue: item.itemBaseValue,
+                    itemIcon: item.iconURL
                 });
 
             }
