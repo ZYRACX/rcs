@@ -1,4 +1,4 @@
-import {Account, ID, TablesDB, Client, Query} from "node-appwrite"
+import {Account, ID, TablesDB, Client, Query, Storage} from "node-appwrite"
 import dotenv from 'dotenv';
 dotenv.config()
 
@@ -38,6 +38,9 @@ const client = new Client()
       },
       get tablesDB() {
         return new TablesDB(client);
+      },
+      get storage() {
+        return new Storage(client)
       }
     }
 }

@@ -6,5 +6,6 @@ export default {
         INVENTORY_TABLE: "inventory",
         MARKET_TABLE: "market",
         ITEM_TABLE: "items",
+        BUCKET_ITEMS_ID: process.env.APPWRITE_BUCKET_ITEMS_ID,
     }
 }
