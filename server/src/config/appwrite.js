@@ -1,5 +1,7 @@
 export default {
     appwrite: {
+        ENDPOINT: process.env.APPWRITE_ENDPOINT,
+        PROJECT_ID: process.env.APPWRITE_PROJECT_ID,
         databaseId: process.env.APPWRITE_DATABASE_ID,
         USER_TABLE: "user",
         DEVICE_TABLE: "devices",
