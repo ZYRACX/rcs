@@ -2,15 +2,17 @@ import { createAppwriteClient, Query } from "../../../utils/appwrite.js";
 import appwriteConfig from "../../../config/appwrite.js";
 import { extractSessionCookie } from "../../../utils/SessionCookieExtractor.js";
 import * as inventoryService from "./inventory.service.js";
+
 /**
- * Get the authenticated player's inventory.
- *
- * This endpoint:
- * 1. Extracts the user's Appwrite session cookie
- * 2. Authenticates the user using Appwrite
- * 3. Fetches the player's inventory rows
- * 4. Fetches item metadata (name, value)
- * 5. Combines both datasets into a structured response
+ * Helper function to generate static Appwrite Storage Preview URLs
+ */
+function getAppwriteImageUrl(fileId) {
+    if (!fileId) return "";
+    return `${appwriteConfig.appwrite.ENDPOINT}/storage/buckets/${appwriteConfig.appwrite.BUCKET_ITEMS_ID}/files/${fileId}/preview?project=${appwriteConfig.appwrite.PROJECT_ID}`;
+}
+
+/**
+ * Get the authenticated player's inventory with image assets.
  *
  * @param {request} req - Express request object
  * @param {response} res - Express response object
@@ -19,17 +21,17 @@ import * as inventoryService from "./inventory.service.js";
  * {
  *   inventory: [
  *     {
- *       itemId: "1",
+ *       itemId: "6999db13003a92979158",
  *       name: "Stone",
  *       quantity: 10,
- *       itemBaseValue: 2
+ *       itemBaseValue: 2,
+ *       itemImageUrl: "https://cloud.appwrite.io/v1/storage/buckets/.../preview?project=..."
  *     }
  *   ]
  * }
  */
 export async function getPlayerInventory(req, res) {
     try {
-
         /**
          * Array that will contain the final formatted inventory items
          */
@@ -37,15 +39,11 @@ export async function getPlayerInventory(req, res) {
 
         /**
          * Extract Appwrite session cookie from request
-         * This session is required to authenticate the user
          */
         const session = extractSessionCookie(req);
 
         /**
          * Create Appwrite clients
-         *
-         * user client → authenticated using session
-         * admin client → authenticated using API key
          */
         const { account } = createAppwriteClient("user", session);
         const { tablesDB } = createAppwriteClient("admin");
@@ -57,31 +55,13 @@ export async function getPlayerInventory(req, res) {
 
         /**
          * Fetch all inventory rows belonging to the user
-         * Each row represents an item entry in the player's inventory
          */
         const inventoryResult = await inventoryService.getPlayerInventory(user.$id, tablesDB);
-        
-        // const inventoryResult = await tablesDB.listRows({
-        //     databaseId: appwriteConfig.appwrite.databaseId,
-        //     tableId: appwriteConfig.appwrite.INVENTORY_TABLE,
-        //     queries: [
-        //         Query.equal("userId", user.$id)
-        //     ]
-        // });
 
         /**
          * Fetch all item definitions from the ITEM_TABLE
-         * This table contains metadata about items
-         * Example:
-         * - itemName
-         * - base value
-         * - other item attributes
          */
         const itemsResult = await inventoryService.getItems(tablesDB);
-        // const items = await tablesDB.listRows({
-        //     databaseId: appwriteConfig.appwrite.databaseId,
-        //     tableId: appwriteConfig.appwrite.ITEM_TABLE,
-        // });
 
         /**
          * Iterate through player's inventory rows
@@ -97,19 +77,17 @@ export async function getPlayerInventory(req, res) {
             );
 
             /**
-             * If item metadata exists, construct
-             * a clean inventory object for the response
+             * If item metadata exists, construct a clean inventory object 
+             * including the dynamic Appwrite storage URL link.
              */
             if (item) {
-
                 inventoryItems.push({
                     itemId: playerInventoryItem.itemId,
                     name: item.itemName,
                     quantity: playerInventoryItem.amount,
                     itemBaseValue: item.itemBaseValue,
-                    itemIcon: item.iconURL
+                    itemImageUrl: getAppwriteImageUrl(item.$id) // 🌟 Attaching the dynamic file link
                 });
-
             }
         }
 
@@ -121,7 +99,6 @@ export async function getPlayerInventory(req, res) {
         });
 
     } catch (error) {
-
         /**
          * Log server error for debugging
          */
@@ -133,6 +110,5 @@ export async function getPlayerInventory(req, res) {
         return res.status(500).json({
             error: "Failed to fetch player inventory"
         });
-
     }
 }
