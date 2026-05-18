@@ -12,7 +12,7 @@ The project is a fullstack monorepo consisting of:
 
 - A **React + Vite** frontend client
 - An **Express.js** backend server
-- **Appwrite** as the Backend-as-a-Service (BaaS) for authentication, database, and session management
+- **Supabase** as the Backend-as-a-Service (BaaS) for authentication, database, and session management
 
 ---
 ## 🗺️ Roadmap
@@ -32,18 +32,18 @@ Coming Soon...
 - [shadcn/ui](https://ui.shadcn.com/) component patterns
 - [React Hook Form](https://react-hook-form.com/) + [Zod](https://zod.dev/)
 - [Axios](https://axios-http.com/)
-- [Appwrite JS SDK](https://appwrite.io/docs/sdks#client)
+- [Supabase JS SDK](https://supabase.io/docs/sdks#client)
 
 ### Backend
 - [Express.js 5](https://expressjs.com/)
-- [node-appwrite](https://appwrite.io/docs/sdks#server) (Admin SDK)
+- [node-supabase](https://supabase.io/docs/sdks#server) (Admin SDK)
 - [cookie-parser](https://www.npmjs.com/package/cookie-parser)
 - [cors](https://www.npmjs.com/package/cors)
 - [dotenv](https://www.npmjs.com/package/dotenv)
 - [nodemon](https://nodemon.io/)
 
 ### Infrastructure & Auth
-- [Appwrite](https://appwrite.io/) — Auth, Database (TablesDB), Sessions
+- [Supabase](https://supabase.io/) — Auth, Database (TablesDB), Sessions
 
 ### DevOps
 - [GitHub Actions](https://github.com/features/actions) — CI/CD on push to `master`
