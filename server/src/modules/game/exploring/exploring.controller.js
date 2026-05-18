@@ -10,6 +10,48 @@ import { extractSessionCookie }
 import * as exploringService
     from "./exploring.service.js";
 
+/**
+ * Handles the exploring game action for authenticated users
+ * 
+ * Performs the following steps:
+ * 1. Validates user session and retrieves authentication
+ * 2. Checks if the user is on cooldown from their last explore action
+ * 3. Updates the user's last explore timestamp
+ * 4. Fetches all items marked as exploreable from the database
+ * 5. Randomly selects items based on weighted probabilities (100-500 items)
+ * 6. Groups and counts the selected items
+ * 7. Adds the items to the user's inventory
+ * 
+ * @async
+ * @param {Object} req - Express request object
+ * @param {Object} req.headers - Request headers containing session cookie
+ * @param {Object} res - Express response object
+ * 
+ * @returns {Object} JSON response containing:
+ *   - 429 status: If cooldown is active with retry_after_ms
+ *   - 200 status: Successful explore with explored_items, grouped_items, inventory_update
+ *   - 500 status: Server error during exploration
+ * 
+ * @throws {Error} Session extraction fails or Appwrite operations fail
+ * 
+ * @example
+ * // Successful response
+ * GET /game/exploring
+ * {
+ *   "explored_items": ["item1", "item2", "item1", ...],
+ *   "grouped_items": { "item1": 5, "item2": 3 },
+ *   "inventory_update": { "updatedItems": 2 }
+ * }
+ * 
+ * @example
+ * // Cooldown response
+ * GET /game/exploring
+ * Status: 429
+ * {
+ *   "error": "Exploring cooldown active",
+ *   "retry_after_ms": 3500
+ * }
+ */
 export async function doExploring( req, res) {
     try {
         const session = extractSessionCookie(req);
